@@ -17,6 +17,7 @@ namespace ColorWatch
     {
         public SerialPort connectPort { get; set; }
         private String trInputNumber;
+        private Boolean openMeasureForm { get; set; }
         public Form1()
         {
             InitializeComponent();
@@ -57,7 +58,7 @@ namespace ColorWatch
                     {
                         label1.Text = comboBox1.Text + " is being used by another application!!";
                         button1.BackColor = Color.Red;
-                        throw;
+                        //throw;
                     }
                 }
                 else
@@ -95,8 +96,12 @@ namespace ColorWatch
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            if(this.Owner!=null){
+                this.Owner.Hide();
+            }
         }
+
+        
 
         /*
          * Send 'L' to micro-controller and write response
@@ -136,7 +141,7 @@ namespace ColorWatch
             {
                 connectPort.Write(button6.Text);
                 //To do : find out exact time needed
-                Thread.Sleep(100); //more time because it gives more response 
+                Thread.Sleep(120); //more time because it gives more response 
                 richTextBox1.Text = connectPort.ReadExisting();
             }
         }
@@ -162,6 +167,63 @@ namespace ColorWatch
                 {//setting cursor at the end for inputext length greater than 1
                     trNumberInputBox.Select(trNumberInputBox.Text.Length, 0);
                 }
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e) //call measure window
+        {
+            if (this.Owner.Owner != null)
+            {
+                openMeasureForm = true;
+                this.Hide();
+                this.Owner.Owner.Show();
+            }
+            else {
+                Form2 f2 = new Form2(); //Measure Form
+                f2.Show();
+            }
+        }
+
+        
+        private void Form1_Closing(object sender, FormClosingEventArgs e)
+        {
+            if(this.Owner.Owner!=null && !openMeasureForm){ //closing form 2 i.e. measure form on cross button click
+                this.Owner.Owner.Close();
+            }
+            //
+        }
+
+        private void button7_Click(object sender, EventArgs e) //listen button, send 'I' and receive response
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("I");
+                Thread.Sleep(20);
+                String calibrationData=connectPort.ReadExisting();
+                if(calibrationData!=null){
+                    String[] calibrationDataArray = BaseFunctions.extractCalibrationFactor(calibrationData);
+                    textBox1.Text = calibrationDataArray[0];
+                    textBox2.Text = calibrationDataArray[1];
+                    textBox3.Text = calibrationDataArray[2];
+                }
+                richTextBox1.Text = calibrationData;
+            }
+        }
+
+        private void button13_Click(object sender, EventArgs e)//calibrate button send 'C'
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("C");
+                Thread.Sleep(20);
+                String calibrationData = connectPort.ReadExisting();
+                if(calibrationData!=null){
+                    String[] calibrationDataArray = BaseFunctions.extractCalibrationNumerics(calibrationData);
+                    textBox1.Text = calibrationDataArray[0];
+                    textBox2.Text = calibrationDataArray[1];
+                    textBox3.Text = calibrationDataArray[2];
+                }
+                richTextBox1.Text = calibrationData;
             }
         }
     }
