@@ -18,20 +18,15 @@ namespace ColorWatch
         public SerialPort connectPort { get; set; }
         private String trInputNumber;
         private Boolean openMeasureForm { get; set; }
+        private Boolean dontCalibrate { get; set; }
         public Form1()
         {
             InitializeComponent();
-            comboBox1.DataSource = GetAllPorts();
+            comboBox1.DataSource = BaseFunctions.GetAllPorts();
             richTextBox1.Enabled = false;
         }
 
-        /*
-         * Get all serial ports list
-         */
-        public Array GetAllPorts()
-        {
-            return System.IO.Ports.SerialPort.GetPortNames();
-        }
+        
 
         /*
          * Connect, Disconnect the selected port
@@ -53,6 +48,7 @@ namespace ColorWatch
                         button1.Text = "Disconnect";
                         button1.BackColor = Color.Green;
                         label1.Text = "";
+                        dontCalibrate = false;
                     }
                     catch (Exception)
                     {
@@ -76,8 +72,7 @@ namespace ColorWatch
          */
         private void button2_Click(object sender, EventArgs e)
         {
-            //List<String> x = new List<string>();
-            comboBox1.DataSource = GetAllPorts();
+            comboBox1.DataSource = BaseFunctions.GetAllPorts();
         }
 
         /*
@@ -88,7 +83,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write(button3.Text);
+                connectPort.Write("W");
                 Thread.Sleep(20);
                 richTextBox1.Text = connectPort.ReadExisting();
             }
@@ -111,7 +106,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write(button4.Text);
+                connectPort.Write("L");
                 Thread.Sleep(20);
                 richTextBox1.Text = connectPort.ReadExisting();
             }
@@ -125,7 +120,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write(button5.Text+"<"+trNumberInputBox.Text+">");
+                connectPort.Write("TR<"+trNumberInputBox.Text.Trim()+">");
                 Thread.Sleep(20);
                 richTextBox1.Text = connectPort.ReadExisting();
             }
@@ -141,11 +136,16 @@ namespace ColorWatch
             {
                 connectPort.Write(button6.Text);
                 //To do : find out exact time needed
-                Thread.Sleep(120); //more time because it gives more response 
+                Thread.Sleep(200); //more time because it gives more response 
                 richTextBox1.Text = connectPort.ReadExisting();
             }
         }
 
+        /**
+         * Controls the length of the text to be 3 in trNumber input box.
+         * Doesn't allow any characters besides the number.
+         * **/
+        
         private void trNumberInputBox_TextChanged(object sender, EventArgs e)
         {
             if (!System.Text.RegularExpressions.Regex.IsMatch(trNumberInputBox.Text, "^[0-9]+$")
@@ -170,7 +170,10 @@ namespace ColorWatch
             }
         }
 
-        private void button12_Click(object sender, EventArgs e) //call measure window
+        /**
+         * Call measure window
+         * **/
+        private void button12_Click(object sender, EventArgs e) 
         {
             if (this.Owner.Owner != null)
             {
@@ -184,21 +187,34 @@ namespace ColorWatch
             }
         }
 
-        
+        /**
+         *closing form 2 i.e. measure form on cross button click
+         * **/
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-            if(this.Owner.Owner!=null && !openMeasureForm){ //closing form 2 i.e. measure form on cross button click
+            if(this.Owner.Owner!=null && !openMeasureForm){ 
                 this.Owner.Owner.Close();
             }
             //
         }
 
-        private void button7_Click(object sender, EventArgs e) //listen button, send 'I' and receive response
+        /**
+         *listen button, send 'I' and receive response
+         * **/
+        private void button7_Click(object sender, EventArgs e) 
         {
             if (button1.Text.Equals("Disconnect"))
             {
                 connectPort.Write("I");
-                Thread.Sleep(20);
+                if (dontCalibrate)// dontCalibrate = true means Calibrate button clicked.
+                {
+                    Thread.Sleep(1600);//simultaneous pressing calibrate then listen 
+                                      //gives argument exception error, so to get rid of this time lapse added
+                }
+                else {
+                    Thread.Sleep(20);
+                }
+                
                 String calibrationData=connectPort.ReadExisting();
                 if(calibrationData!=null){
                     String[] calibrationDataArray = BaseFunctions.extractCalibrationFactor(calibrationData);
@@ -207,23 +223,31 @@ namespace ColorWatch
                     textBox3.Text = calibrationDataArray[2];
                 }
                 richTextBox1.Text = calibrationData;
+                dontCalibrate = false;
             }
         }
 
-        private void button13_Click(object sender, EventArgs e)//calibrate button send 'C'
+        /**
+         *calibrate button send 'C'
+         * **/
+        private void button13_Click(object sender, EventArgs e)
         {
             if (button1.Text.Equals("Disconnect"))
-            {
-                connectPort.Write("C");
-                Thread.Sleep(20);
-                String calibrationData = connectPort.ReadExisting();
-                if(calibrationData!=null){
-                    String[] calibrationDataArray = BaseFunctions.extractCalibrationNumerics(calibrationData);
-                    textBox1.Text = calibrationDataArray[0];
-                    textBox2.Text = calibrationDataArray[1];
-                    textBox3.Text = calibrationDataArray[2];
+            {   
+                if(!dontCalibrate){
+                    connectPort.Write("C");
+                    Thread.Sleep(20);
+                    String calibrationData = connectPort.ReadExisting();
+                    if (calibrationData != null)
+                    {
+                        String[] calibrationDataArray = BaseFunctions.extractCalibrationNumerics(calibrationData);
+                        textBox1.Text = calibrationDataArray[0];
+                        textBox2.Text = calibrationDataArray[1];
+                        textBox3.Text = calibrationDataArray[2];
+                    }
+                    richTextBox1.Text = calibrationData;
+                    dontCalibrate = true;
                 }
-                richTextBox1.Text = calibrationData;
             }
         }
     }

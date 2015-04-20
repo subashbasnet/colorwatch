@@ -8,6 +8,15 @@ namespace ColorWatch
 {
     static class BaseFunctions
     {
+
+
+        /*
+         * Get all serial ports list
+         */
+        public static Array GetAllPorts()
+        {
+            return System.IO.Ports.SerialPort.GetPortNames();
+        }
         /**
          *@listenData 'response of 'I' received from serial port'
          * return array of calibrationfactors 
@@ -48,3 +57,9 @@ namespace ColorWatch
         }
     }
 }
+
+
+//ctrl+K+D for format code
+//ctrl+C+V to duplicate line
+//ctrl+; to find file directly
+//shift+f12 to go to function definition
