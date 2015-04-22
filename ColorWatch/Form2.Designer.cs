@@ -39,6 +39,10 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -53,7 +57,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(524, 227);
+            this.button1.Location = new System.Drawing.Point(448, 227);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(62, 23);
             this.button1.TabIndex = 1;
@@ -63,9 +67,9 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(511, 36);
+            this.button11.Location = new System.Drawing.Point(109, 87);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.Size = new System.Drawing.Size(75, 32);
             this.button11.TabIndex = 16;
             this.button11.Text = "Manual Stop";
             this.button11.UseVisualStyleBackColor = true;
@@ -73,9 +77,9 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(429, 36);
+            this.button10.Location = new System.Drawing.Point(12, 87);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.Size = new System.Drawing.Size(91, 32);
             this.button10.TabIndex = 15;
             this.button10.Text = "Manual Start";
             this.button10.UseVisualStyleBackColor = true;
@@ -136,11 +140,53 @@
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 22;
             // 
+            // button4
+            // 
+            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button4.Location = new System.Drawing.Point(15, 125);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(88, 23);
+            this.button4.TabIndex = 23;
+            this.button4.Text = "Input Low";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button5.Location = new System.Drawing.Point(15, 155);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(88, 43);
+            this.button5.TabIndex = 24;
+            this.button5.Text = "Digital Output Measurement";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.Location = new System.Drawing.Point(109, 155);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 43);
+            this.button6.TabIndex = 25;
+            this.button6.Text = "Initial State";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(225, 101);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(285, 96);
+            this.richTextBox1.TabIndex = 26;
+            this.richTextBox1.Text = "";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 262);
+            this.ClientSize = new System.Drawing.Size(524, 262);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
@@ -171,5 +217,9 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

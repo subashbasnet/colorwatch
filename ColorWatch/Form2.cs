@@ -66,6 +66,11 @@ namespace ColorWatch
          * **/
         private void button1_Click(object sender, EventArgs e)
         {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Close();
+            }
+            
             if (this.ActiveMdiChild != null) //password form null checking
             {
                 this.ActiveMdiChild.ShowDialog();
@@ -104,7 +109,72 @@ namespace ColorWatch
          * **/
         private void button10_Click(object sender, EventArgs e)
         {
-            connectPort.Write("S"); 
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("S");
+                Thread.Sleep(10000);
+                String manualStartResponse = connectPort.ReadExisting();
+                if (manualStartResponse != null)
+                {
+                    if (manualStartResponse.Length > 0)
+                    {
+                        richTextBox1.Text = manualStartResponse;
+                        string[] manualStartColors = BaseFunctions.manualStart(manualStartResponse);
+                        //for input low
+                        inputLow(manualStartColors[0]);
+                        //for D01(digital output measurement input one) 
+                        //and D02(digital output measurement input two)
+                        digitalOutputMeasurement(manualStartColors[1]);
+                    }
+                }
+            }
+        }
+
+        /**
+         * sets 'input low' button as on-->Green and off-->Red color.
+         * **/
+        private void inputLow(string inputLow) {
+            button4.Text = inputLow;
+            if (inputLow.Equals("ON"))
+            {
+                button4.BackColor = Color.Green;
+            }
+            else
+            {
+                button4.BackColor = Color.Red;
+            }
+        }
+
+        /**
+         * for D01(digital output measurement input one) 
+         * and D02(digital output measurement input two)
+         * Sauber-->D01 High und D02 High, Pink farbe ziegen
+         * Not Clean--> D01 Low und D02 High, Grun farbe ziegen
+         * D01 High und D02 Low, Gelb farbe ziegen
+         * Undefined -->D01 Low und D02 Low
+         * **/
+        private void digitalOutputMeasurement(string digitalOutputMeasurement)
+        {
+            switch (digitalOutputMeasurement)
+            {
+                case "undefiniert":
+                    button6.Text = digitalOutputMeasurement;
+                    break;
+                case "gelb":
+                    button6.Text = "Not Clean";
+                    button6.BackColor = Color.Yellow;
+                    break;
+                case "grun":
+                    button6.Text = "Not Clean";
+                    button6.BackColor = Color.Green;
+                    break;
+                case "pink":
+                    button6.Text = "Sauber";
+                    button6.BackColor = Color.Pink;
+                    break;
+                default:
+                    break;
+            }
         }
 
         /**
