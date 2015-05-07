@@ -167,6 +167,17 @@ namespace ColorWatch
             }
             return colors;
         }
+
+        public static string[] RLab(string rLab)
+        {
+            string[] abValue = new string[2];
+            int manualStartAPosition = rLab.IndexOf("a<");
+            int manualStartBPosition = rLab.IndexOf("b<");
+            int manualStartHPosition = rLab.IndexOf("h<");
+            abValue[0] = rLab.Substring(manualStartAPosition + 2, (manualStartBPosition - 2) - (manualStartAPosition + 2));
+            abValue[1] = rLab.Substring(manualStartBPosition + 2, (manualStartHPosition - 2) - (manualStartBPosition + 2));
+            return abValue;
+        }
     }
 }
 
@@ -182,3 +193,6 @@ namespace ColorWatch
 //ctrl+C+V to duplicate line
 //ctrl+; to find file directly
 //shift+f12 to go to function definition
+//press ctrl+k then ctrl+c for comment
+//press ctrl+k then ctrl+u for uncomment
+//I'm using 'visualbasic6' default system for shortcuts, other types could be used

@@ -334,5 +334,10 @@ namespace ColorWatch
                 richTextBox1.Text = outPutTest;
             }
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

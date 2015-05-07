@@ -231,6 +231,7 @@
             this.button9.TabIndex = 18;
             this.button9.Text = "Data Output Low";
             this.button9.UseVisualStyleBackColor = false;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // button6
             // 

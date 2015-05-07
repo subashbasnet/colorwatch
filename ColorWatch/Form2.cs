@@ -15,11 +15,16 @@ namespace ColorWatch
     public partial class Form2 : Form
     {
         public SerialPort connectPort { get; set; }
-        
+        private String[] rLabData;
+        Boolean firstEntryForGraph = true;
+        Boolean firstEntryForDigitalOutput = true;
+
         public Form2()
         {
             InitializeComponent();
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
         }
 
         /**
@@ -70,7 +75,7 @@ namespace ColorWatch
             {
                 connectPort.Close();
             }
-            
+
             if (this.ActiveMdiChild != null) //password form null checking
             {
                 this.ActiveMdiChild.ShowDialog();
@@ -97,43 +102,17 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
-                connectPort.Write("I"); 
+                connectPort.Write("I");
                 Thread.Sleep(20);
                 String calibrationData = connectPort.ReadExisting();
             }
         }
 
         /**
-         * Manual Start Button
-         * Send 'S' 
-         * **/
-        private void button10_Click(object sender, EventArgs e)
-        {
-            if (button3.Text.Equals("Disconnect"))
-            {
-                connectPort.Write("S");
-                Thread.Sleep(10000);
-                String manualStartResponse = connectPort.ReadExisting();
-                if (manualStartResponse != null)
-                {
-                    if (manualStartResponse.Length > 0)
-                    {
-                        richTextBox1.Text = manualStartResponse;
-                        string[] manualStartColors = BaseFunctions.manualStart(manualStartResponse);
-                        //for input low
-                        inputLow(manualStartColors[0]);
-                        //for D01(digital output measurement input one) 
-                        //and D02(digital output measurement input two)
-                        digitalOutputMeasurement(manualStartColors[1]);
-                    }
-                }
-            }
-        }
-
-        /**
          * sets 'input low' button as on-->Green and off-->Red color.
          * **/
-        private void inputLow(string inputLow) {
+        private void inputLow(string inputLow)
+        {
             button4.Text = inputLow;
             if (inputLow.Equals("ON"))
             {
@@ -178,12 +157,149 @@ namespace ColorWatch
         }
 
         /**
-         * Manual Stop Button
-         * Send 'B' 
+         * Manual Start Button
+         * Send 'S' 
          * **/
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("S");
+                Thread.Sleep(1500);
+                String display = connectPort.ReadExisting();
+                if (display != null)
+                {
+                    if (display.Length > 0)
+                    {
+                        //richTextBox1.Text = manualStartResponse;
+                        string[] manualStartColors = BaseFunctions.manualStart(display);
+                        //for input low
+                        inputLow(manualStartColors[0]);
+                        //for D01(digital output measurement input one) 
+                        //and D02(digital output measurement input two)
+                        digitalOutputMeasurement(manualStartColors[1]);
+                        rLabData = BaseFunctions.RLab(display);
+                        if (backgroundWorker1.IsBusy != true)
+                        {
+                            //Start the asynchronous operation.
+                            backgroundWorker1.RunWorkerAsync();
+                        }
+                    }
+                }
+                else { //sometimes microcontroller takes more time to respond
+                    if (backgroundWorker1.IsBusy != true)
+                    {
+                        //Start the asynchronous operation.
+                        backgroundWorker1.RunWorkerAsync();
+                    }
+                }
+            }
+        }
+
+        /**
+          * Manual Stop Button
+          * Send 'B' 
+          * **/
         private void button11_Click(object sender, EventArgs e)
         {
-            connectPort.Write("B");
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("B");
+                //Cancel the asynchronous operation.
+                backgroundWorker1.CancelAsync();
+            }
         }
+
+        /*
+        * Send 'W' to micro-controller and write response
+        * to rich text,
+        * Set the 'Data Output Low' button to Active-->Green color 
+        * or Inactive-->Red color
+        */
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("W");
+                Thread.Sleep(5);
+                String wResponse = connectPort.ReadExisting();
+                if (wResponse != null)
+                {
+                    if (wResponse.Length > 0)
+                    {
+                        if (BaseFunctions.dataOutWrite(wResponse))
+                        {
+                            button9.BackColor = Color.Green;
+                            button9.Text = "Data Output active";
+                        }
+                        else
+                        {
+                            button9.BackColor = Color.Red;
+                            button9.Text = "Data Output inactive";
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        //This event handler is where the time-consuming work ist done.
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            for (int i = 1; i <= 100; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+            }
+        }
+
+        //This event handler updates the progress
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (firstEntryForGraph)
+            {
+                chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+                firstEntryForGraph = false;
+            }
+            else
+            {
+                String manualStartResponseData = connectPort.ReadExisting();
+                if (manualStartResponseData != null)
+                {
+                    if (manualStartResponseData.Length > 0)
+                    {
+                        if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
+                            //richTextBox1.Text = manualStartResponse;
+                            string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
+                            //for input low
+                            inputLow(manualStartColors[0]);
+                            //for D01(digital output measurement input one) 
+                            //and D02(digital output measurement input two)
+                            digitalOutputMeasurement(manualStartColors[1]);
+                            firstEntryForDigitalOutput = false;
+                        }
+                        rLabData = BaseFunctions.RLab(manualStartResponseData);
+                        chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+                    }
+                }
+            }
+        }
+
+        //This event handler deals with the results of the background operation.
+        private void backgroundWorker1_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
     }
 }
