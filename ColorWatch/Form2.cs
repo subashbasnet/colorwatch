@@ -17,7 +17,6 @@ namespace ColorWatch
         public SerialPort connectPort { get; set; }
         private String[] rLabData;
         Boolean firstEntryForGraph = true;
-        Boolean firstEntryForDigitalOutput = true;
 
         public Form2()
         {
@@ -165,7 +164,7 @@ namespace ColorWatch
             if (button3.Text.Equals("Disconnect"))
             {
                 connectPort.Write("S");
-                Thread.Sleep(1500);
+                Thread.Sleep(2000);
                 String display = connectPort.ReadExisting();
                 if (display != null)
                 {
@@ -179,6 +178,8 @@ namespace ColorWatch
                         //and D02(digital output measurement input two)
                         digitalOutputMeasurement(manualStartColors[1]);
                         rLabData = BaseFunctions.RLab(display);
+                        richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + display;
+                        firstEntryForGraph = true;
                         if (backgroundWorker1.IsBusy != true)
                         {
                             //Start the asynchronous operation.
@@ -248,7 +249,7 @@ namespace ColorWatch
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= 1000; i++)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -279,7 +280,7 @@ namespace ColorWatch
                 {
                     if (manualStartResponseData.Length > 0)
                     {
-                        if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
+                        //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
                             //richTextBox1.Text = manualStartResponse;
                             string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
                             //for input low
@@ -287,8 +288,9 @@ namespace ColorWatch
                             //for D01(digital output measurement input one) 
                             //and D02(digital output measurement input two)
                             digitalOutputMeasurement(manualStartColors[1]);
-                            firstEntryForDigitalOutput = false;
-                        }
+                             richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + manualStartResponseData;
+                            //firstEntryForDigitalOutput = false;
+                       // }
                         rLabData = BaseFunctions.RLab(manualStartResponseData);
                         chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
                     }

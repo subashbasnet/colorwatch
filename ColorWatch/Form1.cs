@@ -20,11 +20,18 @@ namespace ColorWatch
         private String trInputNumber;
         private Boolean openMeasureForm { get; set; }
         private Boolean dontCalibrate { get; set; }
+        private String calibrationData;
+        private double hValue;
+        private Boolean firstEntryForHValue = true;
         public Form1()
         {
             InitializeComponent();
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             richTextBox1.Enabled = false;
+            backgroundWorker1.WorkerReportsProgress = true;
+            backgroundWorker1.WorkerSupportsCancellation = true;
+            backgroundWorker2.WorkerReportsProgress = true;
+            backgroundWorker2.WorkerSupportsCancellation = true;
         }
 
 
@@ -118,7 +125,7 @@ namespace ColorWatch
          * to rich text
          */
         private void button4_Click(object sender, EventArgs e)
-        {
+        {//8 second for response it takes
             if (button1.Text.Equals("Disconnect"))
             {
                 connectPort.Write("L");
@@ -243,7 +250,7 @@ namespace ColorWatch
                     Thread.Sleep(20);
                 }
 
-                String calibrationData = connectPort.ReadExisting();
+                calibrationData = connectPort.ReadExisting();
                 if (calibrationData != null)
                 {
                     if (calibrationData.Length > 0)
@@ -252,10 +259,30 @@ namespace ColorWatch
                         textBox1.Text = calibrationDataArray[0];
                         textBox2.Text = calibrationDataArray[1];
                         textBox3.Text = calibrationDataArray[2];
+                        if (backgroundWorker1.IsBusy != true)
+                        {
+                            //Start the asynchronous operation.
+                            backgroundWorker1.RunWorkerAsync();
+                        }
                     }
                 }
                 richTextBox1.Text = calibrationData;
                 dontCalibrate = false;
+            }
+        }
+
+        /**
+         * Stop Button
+         * Cancel both background async process1 and process2 
+         * **/
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("B");
+                //Cancel the asynchronous operation.
+                backgroundWorker1.CancelAsync();
+                backgroundWorker2.CancelAsync();
             }
         }
 
@@ -335,9 +362,160 @@ namespace ColorWatch
             }
         }
 
-        private void button9_Click(object sender, EventArgs e)
+        //This event handler is where the time-consuming work ist done.
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            for (int i = 1; i <= 1000; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+            }
+        }
+
+        //This event handler updates the progress
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (calibrationData != null)
+            {
+                if (calibrationData.Length != 0)
+                {
+                    double[] chartHeightPoints = BaseFunctions.extractBorderValues(calibrationData);
+                    for (int i = 0; i < chartHeightPoints.Length; i++)
+                    {
+                        if (chartHeightPoints[i] <= 50)
+                        {//Border_Clear
+                            chart1.Series[3].Points.AddY(chartHeightPoints[i]);
+                        }
+                        else if (chartHeightPoints[i] <= 100)
+                        {//Border_Yellow
+                            chart1.Series[2].Points.AddY(chartHeightPoints[i]);
+                        }
+                        else if (chartHeightPoints[i] <= 300)
+                        {//Border_Green
+                            chart1.Series[1].Points.AddY(chartHeightPoints[i]);
+                        }
+                        else
+                        {//Border_Pink
+                            chart1.Series[0].Points.AddY(chartHeightPoints[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        //This event handler deals with the results of the background operation
+        private void backgroundWorker1_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
         {
 
         }
+
+        /**
+        * Manual Start Button
+        * Send 'S' 
+        * **/
+        private void button16_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("S");
+                Thread.Sleep(2000);
+                String manualStartResponse = connectPort.ReadExisting();
+                if (manualStartResponse != null)
+                {
+                    if (manualStartResponse.Length > 0)
+                    {
+                        richTextBox1.Text = manualStartResponse;
+                        hValue = BaseFunctions.hValue(manualStartResponse);
+                        firstEntryForHValue = true;
+                        if (backgroundWorker2.IsBusy != true)
+                        {
+                            //Start the asynchronous operation.
+                            backgroundWorker2.RunWorkerAsync();
+                        }
+                    }
+                }
+                else
+                {//sometimes microcontroller takes more time to respond
+                    if (backgroundWorker2.IsBusy != true)
+                    {
+                        //Start the asynchronous operation.
+                        backgroundWorker2.RunWorkerAsync();
+                    }
+                }
+            }
+        }
+
+        /**
+          * Manual Stop Button
+          * Send 'B' 
+          * **/
+        private void button15_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("B");
+                //Cancel the asynchronous operation.
+                backgroundWorker2.CancelAsync();
+            }
+        }
+
+        //This event handler is where the time-consuming work ist done.
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            for (int i = 1; i <= 1000; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+            }
+        }
+
+        //This event handler updates the progress
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (firstEntryForHValue)
+            {
+                chart1.Series[4].Points.AddY(hValue);
+                firstEntryForHValue = false;
+            }
+            else
+            {
+                String manualStartResponseData = connectPort.ReadExisting();
+                if (manualStartResponseData != null)
+                {
+                    if (manualStartResponseData.Length > 0)
+                    {
+                        richTextBox1.Text = manualStartResponseData;
+                        chart1.Series[4].Points.AddY(BaseFunctions.hValue(manualStartResponseData));
+                    }
+                }
+            }
+        }
+
+        //This event handler deals with the results of the background operation.
+        private void backgroundWorker2_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
     }
 }

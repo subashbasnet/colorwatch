@@ -49,6 +49,7 @@
             this.button12 = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -222,8 +223,6 @@
             series1.Legend = "Legend1";
             series1.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
             series1.Name = "L*ab";
-            series1.XAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
-            series1.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
             series1.YValuesPerPoint = 2;
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(318, 197);
@@ -236,11 +235,20 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted_1);
             // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(18, 271);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(190, 96);
+            this.richTextBox1.TabIndex = 30;
+            this.richTextBox1.Text = "";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 379);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.button9);
             this.Controls.Add(this.button12);
@@ -285,5 +293,6 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

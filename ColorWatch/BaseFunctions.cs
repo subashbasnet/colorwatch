@@ -168,6 +168,9 @@ namespace ColorWatch
             return colors;
         }
 
+        /**
+         * @return array of RLab data i.e. 'a' and 'b' value from manual start i.e. 'S' response
+         * **/
         public static string[] RLab(string rLab)
         {
             string[] abValue = new string[2];
@@ -177,6 +180,37 @@ namespace ColorWatch
             abValue[0] = rLab.Substring(manualStartAPosition + 2, (manualStartBPosition - 2) - (manualStartAPosition + 2));
             abValue[1] = rLab.Substring(manualStartBPosition + 2, (manualStartHPosition - 2) - (manualStartBPosition + 2));
             return abValue;
+        }
+
+        /**
+         * @return 'h' values from manual start i.e. 'S' response
+         * **/
+        public static double hValue(string manualStartResponseData)
+        {
+            int manualStartHPosition = manualStartResponseData.IndexOf("h<");
+            int manualStartrawLPosition = manualStartResponseData.IndexOf("rawL<");
+            double hValue = double.Parse(manualStartResponseData.Substring(manualStartHPosition + 2, 
+                (manualStartrawLPosition - 2) - (manualStartHPosition + 2)));
+            return hValue;
+        }
+
+        /**
+         *Extract Border_Pink, Border_Green, Border_Yellow, Border_Clear values
+         * 
+         */
+        public static double[] extractBorderValues(String listenReponse)
+        {
+            int length = listenReponse.Length;
+            double[] hValues = new double[4];
+            int borderPink = listenReponse.IndexOf("Border_Pink");
+            int borderGreen = listenReponse.IndexOf("Border_Green");
+            int borderYellow = listenReponse.IndexOf("Border_Yellow");
+            int borderClear = listenReponse.IndexOf("Border_Clear");
+            hValues[0] = double.Parse(listenReponse.Substring(borderPink + 12, (borderGreen - 1) - (borderPink + 12)));
+            hValues[1] = double.Parse(listenReponse.Substring(borderGreen + 13, (borderYellow - 1) - (borderGreen + 13)));
+            hValues[2] = double.Parse(listenReponse.Substring(borderYellow + 14, (borderClear - 1) - (borderYellow + 14)));
+            hValues[3] = double.Parse(listenReponse.Substring(borderClear + 13, listenReponse.LastIndexOf(">") - (borderClear + 13)));
+            return hValues;
         }
     }
 }
