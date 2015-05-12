@@ -28,6 +28,10 @@ namespace ColorWatch
             InitializeComponent();
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             richTextBox1.Enabled = false;
+            textBox6.Enabled = false;
+            textBox5.Enabled = false;
+            textBox8.Enabled = false;
+            textBox11.Enabled = false;
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
             backgroundWorker2.WorkerReportsProgress = true;
@@ -41,37 +45,40 @@ namespace ColorWatch
          */
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.Items.Count < 1)
-            { //if no items then connection cannot be done
-                label1.Text = "Empty Port List";
-                button1.BackColor = Color.Red;
-            }
-            else
+            if (backgroundWorker1.IsBusy != true && backgroundWorker2.IsBusy != true) //otherwise it shows exception of port closed while 
             {
-                if (button1.Text.Equals("Connect"))
-                {
-                    connectPort = new SerialPort(comboBox1.Text, 19200, Parity.None, 8, StopBits.One);
-                    try
-                    {
-                        connectPort.Open();
-                        button1.Text = "Disconnect";
-                        button1.BackColor = Color.Green;
-                        label1.Text = "";
-                        dontCalibrate = false;
-                    }
-                    catch (Exception)
-                    {
-                        label1.Text = comboBox1.Text + " is being used by another application!!";
-                        button1.BackColor = Color.Red;
-                        //throw;
-                    }
+                if (comboBox1.Items.Count < 1)
+                { //if no items then connection cannot be done
+                    label1.Text = "Empty Port List";
+                    button1.BackColor = Color.Red;
                 }
                 else
-                {//Disconnect pressed
-                    connectPort.Close();
-                    button1.Text = "Connect";
-                    label1.Text = "";
-                    button1.BackColor = default(Color);
+                {
+                    if (button1.Text.Equals("Connect"))
+                    {
+                        connectPort = new SerialPort(comboBox1.Text, 19200, Parity.None, 8, StopBits.One);
+                        try
+                        {
+                            connectPort.Open();
+                            button1.Text = "Disconnect";
+                            button1.BackColor = Color.Green;
+                            label1.Text = "";
+                            dontCalibrate = false;
+                        }
+                        catch (Exception)
+                        {
+                            label1.Text = comboBox1.Text + " is being used by another application!!";
+                            button1.BackColor = Color.Red;
+                            //throw;
+                        }
+                    }
+                    else
+                    {//Disconnect pressed
+                        connectPort.Close();
+                        button1.Text = "Connect";
+                        label1.Text = "";
+                        button1.BackColor = default(Color);
+                    }
                 }
             }
         }
@@ -147,23 +154,6 @@ namespace ColorWatch
                 richTextBox1.Text = connectPort.ReadExisting();
             }
         }
-
-        /*
-         * Send 'S' to micro-controller and write response
-         * to rich text
-         */
-        /*
-         * private void button6_Click(object sender, EventArgs e)
-        {
-            if (button1.Text.Equals("Disconnect"))
-            {
-                connectPort.Write(button6.Text);
-                //To do : find out exact time needed
-                Thread.Sleep(200); //more time because it gives more response 
-                richTextBox1.Text = connectPort.ReadExisting();
-            }
-        }
-         * */
 
         /**
          * Controls the length of the text to be 3 in trNumber input box.
@@ -259,6 +249,16 @@ namespace ColorWatch
                         textBox1.Text = calibrationDataArray[0];
                         textBox2.Text = calibrationDataArray[1];
                         textBox3.Text = calibrationDataArray[2];
+                        //code for borders
+                        double[] borderPoints = BaseFunctions.extractBorderValues(calibrationData);
+                        //Border_Pink
+                        textBox6.Text = borderPoints[0].ToString();
+                        //Border_Green
+                        textBox5.Text = borderPoints[1].ToString();
+                        //Border_Yellow
+                        textBox8.Text = borderPoints[2].ToString();
+                        //Border_Clear
+                        textBox11.Text = borderPoints[3].ToString();
                         if (backgroundWorker1.IsBusy != true)
                         {
                             //Start the asynchronous operation.
@@ -390,25 +390,14 @@ namespace ColorWatch
                 if (calibrationData.Length != 0)
                 {
                     double[] chartHeightPoints = BaseFunctions.extractBorderValues(calibrationData);
-                    for (int i = 0; i < chartHeightPoints.Length; i++)
-                    {
-                        if (chartHeightPoints[i] <= 50)
-                        {//Border_Clear
-                            chart1.Series[3].Points.AddY(chartHeightPoints[i]);
-                        }
-                        else if (chartHeightPoints[i] <= 100)
-                        {//Border_Yellow
-                            chart1.Series[2].Points.AddY(chartHeightPoints[i]);
-                        }
-                        else if (chartHeightPoints[i] <= 300)
-                        {//Border_Green
-                            chart1.Series[1].Points.AddY(chartHeightPoints[i]);
-                        }
-                        else
-                        {//Border_Pink
-                            chart1.Series[0].Points.AddY(chartHeightPoints[i]);
-                        }
-                    }
+                    //Border_Clear
+                    chart1.Series[3].Points.AddY(chartHeightPoints[3]);
+                    //Border_Yellow
+                    chart1.Series[2].Points.AddY(chartHeightPoints[2]);
+                    //Border_Green
+                    chart1.Series[1].Points.AddY(chartHeightPoints[1]);
+                    //Border_Pink
+                    chart1.Series[0].Points.AddY(chartHeightPoints[0]);
                 }
             }
         }
@@ -513,6 +502,26 @@ namespace ColorWatch
 
         //This event handler deals with the results of the background operation.
         private void backgroundWorker2_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void textBox9_data_changed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox4_data_changed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox7_data_changed(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox10_data_changed(object sender, EventArgs e)
         {
 
         }

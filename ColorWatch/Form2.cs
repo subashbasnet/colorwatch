@@ -31,36 +31,39 @@ namespace ColorWatch
          * **/
         private void button3_Click(object sender, EventArgs e)
         {
-            if (comboBox1.Items.Count < 1)
-            { //if no items then connection cannot be done
-                label2.Text = "Empty Port List";
-                button3.BackColor = Color.Red;
-            }
-            else
-            {
-                if (button3.Text.Equals("Connect"))
-                {
-                    connectPort = new SerialPort(comboBox1.Text, 19200, Parity.None, 8, StopBits.One);
-                    try
-                    {
-                        connectPort.Open();
-                        button3.Text = "Disconnect";
-                        button3.BackColor = Color.Green;
-                        label2.Text = "";
-                    }
-                    catch (Exception)
-                    {
-                        label2.Text = comboBox1.Text + " is being used by another application!!";
-                        button3.BackColor = Color.Red;
-                        //throw;
-                    }
+            if (backgroundWorker1.IsBusy != true) //otherwise it shows exception of port closed while 
+            {                                     //while background process is running
+                if (comboBox1.Items.Count < 1)
+                { //if no items then connection cannot be done
+                    label2.Text = "Empty Port List";
+                    button3.BackColor = Color.Red;
                 }
                 else
-                {//Disconnect pressed
-                    connectPort.Close();
-                    button3.Text = "Connect";
-                    label2.Text = "";
-                    button3.BackColor = default(Color);
+                {
+                    if (button3.Text.Equals("Connect"))
+                    {
+                        connectPort = new SerialPort(comboBox1.Text, 19200, Parity.None, 8, StopBits.One);
+                        try
+                        {
+                            connectPort.Open();
+                            button3.Text = "Disconnect";
+                            button3.BackColor = Color.Green;
+                            label2.Text = "";
+                        }
+                        catch (Exception)
+                        {
+                            label2.Text = comboBox1.Text + " is being used by another application!!";
+                            button3.BackColor = Color.Red;
+                            //throw;
+                        }
+                    }
+                    else
+                    {   //Disconnect pressed
+                        connectPort.Close();
+                        button3.Text = "Connect";
+                        label2.Text = "";
+                        button3.BackColor = default(Color);
+                    }
                 }
             }
         }
@@ -178,7 +181,7 @@ namespace ColorWatch
                         //and D02(digital output measurement input two)
                         digitalOutputMeasurement(manualStartColors[1]);
                         rLabData = BaseFunctions.RLab(display);
-                        richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + display;
+                        //richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + display;
                         firstEntryForGraph = true;
                         if (backgroundWorker1.IsBusy != true)
                         {
@@ -187,7 +190,8 @@ namespace ColorWatch
                         }
                     }
                 }
-                else { //sometimes microcontroller takes more time to respond
+                else
+                { //sometimes microcontroller takes more time to respond
                     if (backgroundWorker1.IsBusy != true)
                     {
                         //Start the asynchronous operation.
@@ -281,16 +285,16 @@ namespace ColorWatch
                     if (manualStartResponseData.Length > 0)
                     {
                         //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
-                            //richTextBox1.Text = manualStartResponse;
-                            string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
-                            //for input low
-                            inputLow(manualStartColors[0]);
-                            //for D01(digital output measurement input one) 
-                            //and D02(digital output measurement input two)
-                            digitalOutputMeasurement(manualStartColors[1]);
-                             richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + manualStartResponseData;
-                            //firstEntryForDigitalOutput = false;
-                       // }
+                        //richTextBox1.Text = manualStartResponse;
+                        string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
+                        //for input low
+                        inputLow(manualStartColors[0]);
+                        //for D01(digital output measurement input one) 
+                        //and D02(digital output measurement input two)
+                        digitalOutputMeasurement(manualStartColors[1]);
+                        //richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + manualStartResponseData;
+                        //firstEntryForDigitalOutput = false;
+                        // }
                         rLabData = BaseFunctions.RLab(manualStartResponseData);
                         chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
                     }
@@ -301,6 +305,19 @@ namespace ColorWatch
         //This event handler deals with the results of the background operation.
         private void backgroundWorker1_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
         {
+        }
+
+        /**
+         * Cancel background process on 'stop' button click
+         * **/
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("B");
+                //Cancel the asynchronous operation.
+                backgroundWorker1.CancelAsync();
+            }
         }
 
     }
