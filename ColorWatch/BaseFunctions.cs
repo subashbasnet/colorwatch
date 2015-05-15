@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ColorWatch
 {
@@ -189,7 +190,7 @@ namespace ColorWatch
         {
             int manualStartHPosition = manualStartResponseData.IndexOf("h<");
             int manualStartrawLPosition = manualStartResponseData.IndexOf("rawL<");
-            double hValue = double.Parse(manualStartResponseData.Substring(manualStartHPosition + 2, 
+            double hValue = double.Parse(manualStartResponseData.Substring(manualStartHPosition + 2,
                 (manualStartrawLPosition - 2) - (manualStartHPosition + 2)));
             return hValue;
         }
@@ -212,9 +213,49 @@ namespace ColorWatch
             hValues[3] = double.Parse(listenReponse.Substring(borderClear + 13, listenReponse.LastIndexOf(">") - (borderClear + 13)));
             return hValues;
         }
+
+        /**
+         * getting the index of nth occurrence of char in a string
+         * **/
+        public static int GetNthIndex(string s, char t, int n)
+        {
+            int count = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == t)
+                {
+                    count++;
+                    if (count == n)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        /**
+         * Only the number entry is allowed but be more than one '.' is also allowed and backspace
+         * **/
+        public static void restrictCharsFunction(object sender, KeyPressEventArgs e)
+        {
+            if (!(Char.IsDigit(e.KeyChar) || (e.KeyChar == (char)Keys.Back) || e.KeyChar == '.'))
+                e.Handled = true;
+        }
+
+        public static String trimForMoreThanOneDotInInputNumber(String number)
+        {
+            int count = number.Trim().Count(x => x == '.');
+            if (count > 1)
+            {
+                //trim the text after second '.'
+                int indexOfSecondOccurrence = GetNthIndex(number, '.', 2);
+                return number.Substring(0, indexOfSecondOccurrence);
+            }
+            return number.Trim(); 
+        }
     }
 }
-
 
 
 

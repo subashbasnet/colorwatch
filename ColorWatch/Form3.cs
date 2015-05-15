@@ -30,7 +30,9 @@ namespace ColorWatch
             InitializeComponent();
         }
 
-
+        /**
+         * Go to next form i.e. Test-Admin form
+         * **/
         private void button1_Click(object sender, EventArgs e)
         {
             if (textBox1.Text.Trim().Equals("c"))
@@ -50,9 +52,19 @@ namespace ColorWatch
                     Form1 f1 = new Form1(); //Test form
                     f1.ShowDialog(this);
                 }
-                
             }
         }
 
+        /**
+         * Take 'Enter' also as 'Button Click'
+         * **/
+        private void passwordTextBoxKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                button1_Click(sender, e);
+            }
+        }
     }
 }

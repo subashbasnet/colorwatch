@@ -74,7 +74,10 @@ namespace ColorWatch
                     }
                     else
                     {//Disconnect pressed
-                        connectPort.Close();
+                        if(connectPort!=null){ //for the case when USB is already taken out before disconnect pressed
+                            //and disconnect is pressed later then throws error on close as there is no connection.
+                            connectPort.Close();
+                        }
                         button1.Text = "Connect";
                         label1.Text = "";
                         button1.BackColor = default(Color);
@@ -508,23 +511,134 @@ namespace ColorWatch
 
         private void textBox9_data_changed(object sender, EventArgs e)
         {
-
+            if (System.Text.RegularExpressions.Regex.IsMatch(textBox9.Text, "^[\\d.]+$"))
+            {
+                Console.WriteLine("True");
+            }
+            else
+            {
+                Console.WriteLine("False");
+            }
         }
 
-        private void textBox4_data_changed(object sender, EventArgs e)
+        /**
+         * Only the number entry is allowed but be more than one '.' is also allowed and backspace
+         * **/
+        private void textBox9_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            BaseFunctions.restrictCharsFunction(sender, e);
         }
 
-        private void textBox7_data_changed(object sender, EventArgs e)
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            BaseFunctions.restrictCharsFunction(sender, e);
         }
 
-        private void textBox10_data_changed(object sender, EventArgs e)
+        private void textBox7_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            BaseFunctions.restrictCharsFunction(sender, e);
         }
 
+        private void textBox10_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            BaseFunctions.restrictCharsFunction(sender, e);
+        }
+
+        /**
+         * send 'MP<XX>' where ‘XX’ is the number entered to microcontroller and 
+         *  now change the greyed text box with this value and the other text box empty as before.
+         * **/
+        private void button17_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                if (textBox9.Text.Length > 0) {
+                    String borderValue = BaseFunctions.trimForMoreThanOneDotInInputNumber(textBox9.Text);
+                    if (borderValue.Length == 1 && borderValue.Equals("."))
+                    {
+                        textBox9.Clear();
+                    }
+                    else {
+                        connectPort.Write("MP<" + borderValue + ">");
+                        textBox6.Text = borderValue;
+                        textBox9.Clear();
+                    }
+                }
+            }
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                if (textBox4.Text.Length > 0)
+                {
+                    String borderValue = BaseFunctions.trimForMoreThanOneDotInInputNumber(textBox4.Text);
+                    if (borderValue.Length == 1 && borderValue.Equals("."))
+                    {
+                        textBox4.Clear();
+                    }
+                    else
+                    {
+                        connectPort.Write("MP<" + borderValue + ">");
+                        textBox5.Text = borderValue;
+                        textBox4.Clear();
+                    }
+                }
+            }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                if (textBox7.Text.Length > 0)
+                {
+                    String borderValue = BaseFunctions.trimForMoreThanOneDotInInputNumber(textBox7.Text);
+                    if (borderValue.Length == 1 && borderValue.Equals("."))
+                    {
+                        textBox7.Clear();
+                    }
+                    else
+                    {
+                        connectPort.Write("MP<" + borderValue + ">");
+                        textBox8.Text = borderValue;
+                        textBox7.Clear();
+                    }
+                }
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                if (textBox10.Text.Length > 0)
+                {
+                    String borderValue = BaseFunctions.trimForMoreThanOneDotInInputNumber(textBox10.Text);
+                    if (borderValue.Length == 1 && borderValue.Equals("."))
+                    {
+                        textBox10.Clear();
+                    }
+                    else
+                    {
+                        connectPort.Write("MP<" + borderValue + ">");
+                        textBox11.Text = borderValue;
+                        textBox10.Clear();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Clear the chart values , not checked
+         * **/
+        private void button21_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                chart1.Series.Clear();
+            }
+        }
     }
 }
