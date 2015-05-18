@@ -36,6 +36,8 @@ namespace ColorWatch
             backgroundWorker1.WorkerSupportsCancellation = true;
             backgroundWorker2.WorkerReportsProgress = true;
             backgroundWorker2.WorkerSupportsCancellation = true;
+            backgroundWorker3.WorkerReportsProgress = true;
+            backgroundWorker3.WorkerSupportsCancellation = true;
         }
 
 
@@ -140,7 +142,8 @@ namespace ColorWatch
             {
                 connectPort.Write("L");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                //richTextBox1.Text = connectPort.ReadExisting();
+                backgroundWorker3.RunWorkerAsync();
             }
         }
 
@@ -509,18 +512,6 @@ namespace ColorWatch
 
         }
 
-        private void textBox9_data_changed(object sender, EventArgs e)
-        {
-            if (System.Text.RegularExpressions.Regex.IsMatch(textBox9.Text, "^[\\d.]+$"))
-            {
-                Console.WriteLine("True");
-            }
-            else
-            {
-                Console.WriteLine("False");
-            }
-        }
-
         /**
          * Only the number entry is allowed but be more than one '.' is also allowed and backspace
          * **/
@@ -631,14 +622,61 @@ namespace ColorWatch
         }
 
         /**
-         * Clear the chart values , not checked
+         * Clear the chart values
          * **/
         private void button21_Click(object sender, EventArgs e)
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                chart1.Series.Clear();
+                backgroundWorker1.CancelAsync();
+                backgroundWorker2.CancelAsync();
+                Thread.Sleep(100);
+                chart1.Series[3].Points.Clear();
+                chart1.Series[2].Points.Clear();
+                chart1.Series[1].Points.Clear();
+                chart1.Series[0].Points.Clear();
+                chart1.Series[4].Points.Clear();
+                //calibrationData = null;
             }
+        }
+
+        //This event handler is where the time-consuming work ist done.
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            for (int i = 1; i <= 50; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+            }
+        }
+
+        /**
+         * Cancel background process of reading response for led
+         * **/
+        private void backgroundWorker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            String ledResponseData = connectPort.ReadExisting();
+            if(ledResponseData!=null){
+                if(ledResponseData.Length>0){
+                    richTextBox1.Text = ledResponseData;
+                    backgroundWorker3.CancelAsync();
+                }
+            }
+        }
+
+        private void backgroundWorker3_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+
         }
     }
 }

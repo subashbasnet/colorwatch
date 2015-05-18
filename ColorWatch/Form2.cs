@@ -320,5 +320,17 @@ namespace ColorWatch
             }
         }
 
+        /**
+         * Clear the chart
+         * **/
+        private void button13_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                backgroundWorker1.CancelAsync();
+                Thread.Sleep(100);
+                chart1.Series[0].Points.Clear();
+            }
+        }
     }
 }
