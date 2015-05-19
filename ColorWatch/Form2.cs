@@ -76,6 +76,8 @@ namespace ColorWatch
             if (button3.Text.Equals("Disconnect"))
             {
                 connectPort.Close();
+                button3.Text = "Connect";
+                button3.BackColor = default(Color);
             }
 
             if (this.ActiveMdiChild != null) //password form null checking

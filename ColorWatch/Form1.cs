@@ -76,7 +76,8 @@ namespace ColorWatch
                     }
                     else
                     {//Disconnect pressed
-                        if(connectPort!=null){ //for the case when USB is already taken out before disconnect pressed
+                        if (connectPort != null)
+                        { //for the case when USB is already taken out before disconnect pressed
                             //and disconnect is pressed later then throws error on close as there is no connection.
                             connectPort.Close();
                         }
@@ -202,6 +203,8 @@ namespace ColorWatch
             if (button1.Text.Equals("Disconnect"))
             {
                 connectPort.Close();
+                button1.Text = "Connect";
+                button1.BackColor = default(Color);
             }
             if (this.Owner.Owner != null)
             {
@@ -404,6 +407,7 @@ namespace ColorWatch
                     chart1.Series[1].Points.AddY(chartHeightPoints[1]);
                     //Border_Pink
                     chart1.Series[0].Points.AddY(chartHeightPoints[0]);
+
                 }
             }
         }
@@ -489,7 +493,8 @@ namespace ColorWatch
         {
             if (firstEntryForHValue)
             {
-                chart1.Series[4].Points.AddY(hValue);
+                chart1.Series[4].Points.AddXY(chart1.ChartAreas[0].AxisX.Maximum, hValue);
+                //richTextBox1.Text = "----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
                 firstEntryForHValue = false;
             }
             else
@@ -500,7 +505,7 @@ namespace ColorWatch
                     if (manualStartResponseData.Length > 0)
                     {
                         richTextBox1.Text = manualStartResponseData;
-                        chart1.Series[4].Points.AddY(BaseFunctions.hValue(manualStartResponseData));
+                        chart1.Series[4].Points.AddXY(chart1.ChartAreas[0].AxisX.Maximum,BaseFunctions.hValue(manualStartResponseData));
                     }
                 }
             }
@@ -543,13 +548,15 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                if (textBox9.Text.Length > 0) {
+                if (textBox9.Text.Length > 0)
+                {
                     String borderValue = BaseFunctions.trimForMoreThanOneDotInInputNumber(textBox9.Text);
                     if (borderValue.Length == 1 && borderValue.Equals("."))
                     {
                         textBox9.Clear();
                     }
-                    else {
+                    else
+                    {
                         connectPort.Write("MP<" + borderValue + ">");
                         textBox6.Text = borderValue;
                         textBox9.Clear();
@@ -666,8 +673,10 @@ namespace ColorWatch
         private void backgroundWorker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             String ledResponseData = connectPort.ReadExisting();
-            if(ledResponseData!=null){
-                if(ledResponseData.Length>0){
+            if (ledResponseData != null)
+            {
+                if (ledResponseData.Length > 0)
+                {
                     richTextBox1.Text = ledResponseData;
                     backgroundWorker3.CancelAsync();
                 }
