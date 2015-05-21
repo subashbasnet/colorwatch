@@ -80,6 +80,7 @@
             this.button17 = new System.Windows.Forms.Button();
             this.button21 = new System.Windows.Forms.Button();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker4 = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -548,6 +549,12 @@
             this.backgroundWorker3.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker3_ProgressChanged);
             this.backgroundWorker3.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker3_RunWorkerCompleted_1);
             // 
+            // backgroundWorker4
+            // 
+            this.backgroundWorker4.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker4_DoWork);
+            this.backgroundWorker4.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker4_ProgressChanged);
+            this.backgroundWorker4.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker4_RunWorkerCompleted_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -638,6 +645,7 @@
         private System.Windows.Forms.Button button18;
         private System.Windows.Forms.Button button21;
         private System.ComponentModel.BackgroundWorker backgroundWorker3;
+        private System.ComponentModel.BackgroundWorker backgroundWorker4;
     }
 }
 

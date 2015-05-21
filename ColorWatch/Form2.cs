@@ -75,6 +75,7 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
+                connectPort.Write("B");
                 connectPort.Close();
                 button3.Text = "Connect";
                 button3.BackColor = default(Color);

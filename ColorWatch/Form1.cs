@@ -23,6 +23,9 @@ namespace ColorWatch
         private String calibrationData;
         private double hValue;
         private Boolean firstEntryForHValue = true;
+        private Boolean _restart1;
+        private double testForGraph = 0;
+        //Stopwatch sw = new Stopwatch();
         public Form1()
         {
             InitializeComponent();
@@ -38,6 +41,8 @@ namespace ColorWatch
             backgroundWorker2.WorkerSupportsCancellation = true;
             backgroundWorker3.WorkerReportsProgress = true;
             backgroundWorker3.WorkerSupportsCancellation = true;
+            backgroundWorker4.WorkerReportsProgress = true;
+            backgroundWorker4.WorkerSupportsCancellation = true;
         }
 
 
@@ -202,6 +207,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
+                connectPort.Write("B");
                 connectPort.Close();
                 button1.Text = "Connect";
                 button1.BackColor = default(Color);
@@ -248,8 +254,8 @@ namespace ColorWatch
                 {
                     Thread.Sleep(20);
                 }
-
                 calibrationData = connectPort.ReadExisting();
+                richTextBox1.Text = "Calibration data -------->" + calibrationData;
                 if (calibrationData != null)
                 {
                     if (calibrationData.Length > 0)
@@ -289,9 +295,11 @@ namespace ColorWatch
             if (button1.Text.Equals("Disconnect"))
             {
                 connectPort.Write("B");
+                setRestart1(false);
                 //Cancel the asynchronous operation.
                 backgroundWorker1.CancelAsync();
                 backgroundWorker2.CancelAsync();
+                backgroundWorker4.CancelAsync();
             }
         }
 
@@ -407,6 +415,10 @@ namespace ColorWatch
                     chart1.Series[1].Points.AddY(chartHeightPoints[1]);
                     //Border_Pink
                     chart1.Series[0].Points.AddY(chartHeightPoints[0]);
+                    if (!isRestart1())
+                    {
+                        chart1.Series[4].Points.AddY(1);
+                    }
 
                 }
             }
@@ -426,6 +438,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
+                backgroundWorker4.CancelAsync();
                 connectPort.Write("S");
                 Thread.Sleep(2000);
                 String manualStartResponse = connectPort.ReadExisting();
@@ -462,15 +475,26 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write("B");
-                //Cancel the asynchronous operation.
                 backgroundWorker2.CancelAsync();
+                connectPort.Write("B");
+                Thread.Sleep(1000);
+                chart1.Series[4].Points.AddY(2);
+                setRestart1(false);
+                if (backgroundWorker4.IsBusy != true)
+                {
+                    //Start the asynchronous operation.
+                    backgroundWorker4.RunWorkerAsync();
+                }
+                else {
+                    backgroundWorker4.CancelAsync();
+                }
             }
         }
 
         //This event handler is where the time-consuming work ist done.
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
+            backgroundWorker4.CancelAsync();
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
             for (int i = 1; i <= 1000; i++)
             {
@@ -491,21 +515,34 @@ namespace ColorWatch
         //This event handler updates the progress
         private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            setRestart1(true);
+            //double xAxisMaximum = chart1.ChartAreas[0].AxisX.Maximum;
             if (firstEntryForHValue)
             {
-                chart1.Series[4].Points.AddXY(chart1.ChartAreas[0].AxisX.Maximum, hValue);
-                //richTextBox1.Text = "----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
+                testForGraph += 2; //the time elapse for reading the data
+                //testForGraph = sw.ElapsedMilliseconds/200;
+                //chart1.Series[4].Points.AddXY(testForGraph, hValue);
+                chart1.Series[4].Points.AddY(hValue);
+                //richTextBox1.Text = "Xmax 1st----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
+                //richTextBox1.Text = "Xmax 1st----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString()
+                //    + "elapsed milli seconds 1st----->" + sw.ElapsedMilliseconds;
                 firstEntryForHValue = false;
             }
             else
             {
+                testForGraph += 3; //the time elapse for reading the data
                 String manualStartResponseData = connectPort.ReadExisting();
                 if (manualStartResponseData != null)
                 {
                     if (manualStartResponseData.Length > 0)
                     {
+                        testForGraph += 1;
                         richTextBox1.Text = manualStartResponseData;
-                        chart1.Series[4].Points.AddXY(chart1.ChartAreas[0].AxisX.Maximum,BaseFunctions.hValue(manualStartResponseData));
+                        //chart1.Series[4].Points.AddXY(testForGraph, BaseFunctions.hValue(manualStartResponseData));
+                        chart1.Series[4].Points.AddY(BaseFunctions.hValue(manualStartResponseData));
+                        //richTextBox1.Text = "Xmax----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
+                        //richTextBox1.Text = "Xmax----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString() +
+                         //   "elapsed milli seconds----->" + sw.ElapsedMilliseconds;
                     }
                 }
             }
@@ -684,6 +721,51 @@ namespace ColorWatch
         }
 
         private void backgroundWorker3_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        /**
+     * @return the _restart1
+     */
+        public Boolean isRestart1()
+        {
+            return _restart1;
+        }
+
+        /**
+         * @param _restart1 the _restart1 to set
+         */
+        public void setRestart1(Boolean _restart1)
+        {
+            this._restart1 = _restart1;
+        }
+
+        private void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
+        {
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            for (int i = 1; i <= 1000; i++)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+            }
+        }
+
+        private void backgroundWorker4_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            chart1.Series[4].Points.AddY(1);
+        }
+
+        private void backgroundWorker4_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
         {
 
         }
