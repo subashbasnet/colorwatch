@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace ColorWatch
 {
@@ -17,7 +18,7 @@ namespace ColorWatch
         public SerialPort connectPort { get; set; }
         private String[] rLabData;
         Boolean firstEntryForGraph = true;
-
+        int insertCount = 0;
         public Form2()
         {
             InitializeComponent();
@@ -255,8 +256,9 @@ namespace ColorWatch
         //This event handler is where the time-consuming work ist done.
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            insertCount = 0;
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 1000; i++)
+            for (int i = 1; i <= 5000; i++)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -265,6 +267,8 @@ namespace ColorWatch
                 }
                 else
                 {
+                    chart1.Series[0].Sort(PointSortOrder.Ascending, "X");
+                    chart1.DataManipulator.Sort(System.Windows.Forms.DataVisualization.Charting.PointSortOrder.Ascending, chart1.Series[0]);
                     //Perform a time consuming operation and report progress
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
@@ -277,6 +281,7 @@ namespace ColorWatch
         {
             if (firstEntryForGraph)
             {
+                insertCount++;
                 chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
                 firstEntryForGraph = false;
             }
@@ -287,6 +292,7 @@ namespace ColorWatch
                 {
                     if (manualStartResponseData.Length > 0)
                     {
+                        insertCount++;
                         //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
                         //richTextBox1.Text = manualStartResponse;
                         string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
@@ -333,6 +339,31 @@ namespace ColorWatch
                 backgroundWorker1.CancelAsync();
                 Thread.Sleep(100);
                 chart1.Series[0].Points.Clear();
+            }
+        }
+
+        /**
+         * Reset the values in the chart i.e. to the default condition
+         * 
+         * **/
+        private void button14_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                backgroundWorker1.CancelAsync();
+                connectPort.Write("B");
+                Thread.Sleep(2000);
+                chart1.Series[0].Points.Clear();
+                //connectPort.Close();
+                //button3.Text = "Connect";
+                //button3.BackColor = default(Color);
+                button4.Text = "Input Low";
+                button4.BackColor = default(Color);
+                button5.Text = "Digital Output Measurement";
+                button5.BackColor = default(Color);
+                button6.Text = "Initial State";
+                button6.BackColor = default(Color);
+                //comboBox1.DataSource = BaseFunctions.GetAllPorts();
             }
         }
     }

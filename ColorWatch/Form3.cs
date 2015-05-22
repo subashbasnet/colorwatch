@@ -35,7 +35,7 @@ namespace ColorWatch
          * **/
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Trim().Equals("c"))
+            if (textBox1.Text.Trim().Equals("steinbeis"))
             {
                 if (this.Owner != null)
                 {

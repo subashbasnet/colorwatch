@@ -50,6 +50,7 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -205,13 +206,22 @@
             this.chart1.BackColor = System.Drawing.Color.Gainsboro;
             this.chart1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.LeftRight;
             this.chart1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Cross;
-            chartArea1.AxisX2.Maximum = 1000D;
-            chartArea1.AxisX2.Minimum = -1000D;
-            chartArea1.AxisY2.Maximum = 1000D;
-            chartArea1.AxisY2.Minimum = -1000D;
+            chartArea1.AxisX2.Interval = 4D;
+            chartArea1.AxisX2.Title = "a";
+            chartArea1.AxisX2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisX2.TitleForeColor = System.Drawing.Color.Navy;
+            chartArea1.AxisY2.Interval = 20D;
+            chartArea1.AxisY2.Maximum = 100D;
+            chartArea1.AxisY2.Minimum = -100D;
+            chartArea1.AxisY2.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Horizontal;
+            chartArea1.AxisY2.Title = "b";
+            chartArea1.AxisY2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisY2.TitleForeColor = System.Drawing.Color.Navy;
             chartArea1.BackColor = System.Drawing.Color.Gainsboro;
             chartArea1.BackHatchStyle = System.Windows.Forms.DataVisualization.Charting.ChartHatchStyle.Cross;
             chartArea1.BorderColor = System.Drawing.Color.Transparent;
+            chartArea1.CursorX.IsUserEnabled = true;
+            chartArea1.CursorY.IsUserEnabled = true;
             chartArea1.Name = "ChartArea1";
             chartArea1.Position.Auto = false;
             chartArea1.Position.Height = 85F;
@@ -225,6 +235,7 @@
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series1.CustomProperties = "IsXAxisQuantitative=False";
             series1.Legend = "Legend1";
             series1.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
             series1.Name = "L*ab";
@@ -252,11 +263,22 @@
             this.button13.UseVisualStyleBackColor = true;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(12, 269);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 48);
+            this.button14.TabIndex = 31;
+            this.button14.Text = "RESET";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 379);
+            this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.button9);
@@ -303,5 +325,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
     }
 }
