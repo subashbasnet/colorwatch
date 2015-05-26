@@ -18,7 +18,7 @@ namespace ColorWatch
         public SerialPort connectPort { get; set; }
         private String[] rLabData;
         Boolean firstEntryForGraph = true;
-        int insertCount = 0;
+        private int count;
         public Form2()
         {
             InitializeComponent();
@@ -256,7 +256,6 @@ namespace ColorWatch
         //This event handler is where the time-consuming work ist done.
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            insertCount = 0;
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
             for (int i = 1; i <= 5000; i++)
             {
@@ -267,8 +266,10 @@ namespace ColorWatch
                 }
                 else
                 {
-                    chart1.Series[0].Sort(PointSortOrder.Ascending, "X");
-                    chart1.DataManipulator.Sort(System.Windows.Forms.DataVisualization.Charting.PointSortOrder.Ascending, chart1.Series[0]);
+                    //solution to data point addition at end by sorting
+                    //chart1.Series[0].Sort(PointSortOrder.Ascending, "X");
+                    //chart1.DataManipulator.Sort(System.Windows.Forms.DataVisualization.Charting.PointSortOrder.Ascending, chart1.Series[0]);
+                    
                     //Perform a time consuming operation and report progress
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
@@ -281,7 +282,6 @@ namespace ColorWatch
         {
             if (firstEntryForGraph)
             {
-                insertCount++;
                 chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
                 firstEntryForGraph = false;
             }
@@ -292,7 +292,6 @@ namespace ColorWatch
                 {
                     if (manualStartResponseData.Length > 0)
                     {
-                        insertCount++;
                         //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
                         //richTextBox1.Text = manualStartResponse;
                         string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
@@ -305,7 +304,19 @@ namespace ColorWatch
                         //firstEntryForDigitalOutput = false;
                         // }
                         rLabData = BaseFunctions.RLab(manualStartResponseData);
-                        chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+                        //chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+                        count++;
+                        //richTextBox1.Text = "rLabData[0]-->" + rLabData[0] + "/n  rLabData[1]-->" + rLabData[1]+"/n  count-->"+count;
+                        //new code
+                        DataPoint dp = chart1.Series[0].Points.FirstOrDefault(p => p.XValue > Double.Parse(rLabData[0]));
+                        if (dp != null)
+                        {
+                            // got it, so we insert before it..
+                            int index = chart1.Series[0].Points.IndexOf(dp);
+                            if (index >= 0) chart1.Series[0].Points.InsertXY(index, Double.Parse(rLabData[0]), Double.Parse(rLabData[1]));
+                        }
+                        // no, so we add to the end
+                        else chart1.Series[0].Points.AddXY(Double.Parse(rLabData[0]), Double.Parse(rLabData[1]));
                     }
                 }
             }
