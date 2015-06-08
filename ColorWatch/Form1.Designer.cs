@@ -345,8 +345,8 @@
             chartArea1.Position.Auto = false;
             chartArea1.Position.Height = 90F;
             chartArea1.Position.Width = 90F;
-            chartArea1.Position.X = 5F;
-            chartArea1.Position.Y = 10F;
+            chartArea1.Position.X = 3F;
+            chartArea1.Position.Y = 8F;
             chartArea1.ShadowColor = System.Drawing.SystemColors.ButtonShadow;
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
