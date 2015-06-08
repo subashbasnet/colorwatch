@@ -24,11 +24,13 @@ namespace ColorWatch
         private double hValue;
         private Boolean firstEntryForHValue = true;
         private Boolean _restart1;
+        private Boolean onLoad = true;
         private double testForGraph = 0;
         //Stopwatch sw = new Stopwatch();
         public Form1()
         {
             InitializeComponent();
+            chart1.Series[0].Color = Color.Pink;
             domainUpDown1.SelectedIndex = 0;
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             richTextBox1.Enabled = false;
@@ -131,6 +133,8 @@ namespace ColorWatch
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            chart1.Series[0].Color = Color.Transparent;
+            chart1.Series[0].Points.AddXY(15, 40);
             if (this.Owner != null)
             {
                 this.Owner.Hide();
@@ -166,7 +170,7 @@ namespace ColorWatch
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
                 richTextBox1.Text = digitalOuptResponse;
-                if (digitalOuptResponse.Equals("1"))
+                if (digitalOuptResponse.Equals("unfiltered_mode<1>"))
                 {
                     button26.BackColor = Color.Green;
                 }
@@ -189,7 +193,7 @@ namespace ColorWatch
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
                 richTextBox1.Text = digitalOuptResponse;
-                if (digitalOuptResponse.Equals("1"))
+                if (digitalOuptResponse.Equals("Raw_Data_Output<1>"))
                 {
                     button27.BackColor = Color.Green;
                 }
@@ -213,13 +217,14 @@ namespace ColorWatch
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
                 richTextBox1.Text = digitalOuptResponse;
-                if (digitalOuptResponse.Equals("0"))
-                {
-                    button25.BackColor = Color.Green;
-                }
-                else {
-                    button25.BackColor = default(Color);
-                }
+                //if (digitalOuptResponse.Equals("0"))
+                //{
+                //    button25.BackColor = Color.Green;
+                //}
+                //else
+                //{
+                //    button25.BackColor = default(Color);
+                //}
             }
         }
 
@@ -312,14 +317,14 @@ namespace ColorWatch
         }
 
         /**
-         * Controls the length of the text to be 3 in input box.
+         * Controls the length of the text to be not greater than 4 in input box.
          * Doesn't allow any characters besides the number.
          * **/
         public void textBoxFilter(TextBox input, string inputType)
         {
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(input.Text, "^[0-9]+$")
-                || input.TextLength > 3)//true = not only number in inputtext or inputtext length greater than 3
+                || input.TextLength > 4)//true = not only number in inputtext or inputtext length greater than 3
             {
                 if (input.TextLength > 1)
                 {//greater than 1 set inputtext as old data
@@ -428,11 +433,16 @@ namespace ColorWatch
                     Thread.Sleep(20);
                 }
                 calibrationData = connectPort.ReadExisting();
-                richTextBox1.Text = "Calibration data -------->" + calibrationData;
+                richTextBox1.Text = calibrationData;
                 if (calibrationData != null)
                 {
                     if (calibrationData.Length > 0)
                     {
+                        if(onLoad){
+                            chart1.Series[0].Points.Clear(); //to clear the initial point set to show the chart
+                            chart1.Series[0].Color = Color.Pink;
+                            onLoad = false;
+                        }
                         String[] calibrationDataArray = BaseFunctions.extractCalibrationFactor(calibrationData);
                         textBox1.Text = calibrationDataArray[0];
                         textBox2.Text = calibrationDataArray[1];
@@ -619,6 +629,12 @@ namespace ColorWatch
                 {
                     if (manualStartResponse.Length > 0)
                     {
+                        if (onLoad)
+                        {
+                            chart1.Series[0].Points.Clear(); //to clear the initial point set to show the chart
+                            chart1.Series[0].Color = Color.Pink;
+                            onLoad = false;
+                        }
                         richTextBox1.Text = manualStartResponse;
                         hValue = BaseFunctions.hValue(manualStartResponse);
                         firstEntryForHValue = true;
@@ -944,5 +960,59 @@ namespace ColorWatch
 
         }
 
+        /*
+        * Send 'A' i.e. self-test to micro-controller and write response
+        * to rich text and change button color
+        */
+        private void button30_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("A");
+                Thread.Sleep(20);
+                string digitalOuptResponse = connectPort.ReadExisting();
+                richTextBox1.Text = digitalOuptResponse;
+                if (digitalOuptResponse.Equals("Pass"))
+                {
+                    button27.BackColor = Color.Green;
+                }
+                else if (digitalOuptResponse.Equals("Fail"))
+                {
+                    button27.BackColor = Color.Red;
+                }
+                else
+                {
+                    button27.BackColor = default(Color);
+                }
+            }
+        }
+
+        /*
+        * Send 'G' i.e. measuring conductivity to micro-controller and write response
+        * to rich text and change button color
+        */
+        private void button28_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("A");
+                Thread.Sleep(20);
+                richTextBox1.Text = connectPort.ReadExisting();
+            }
+        }
+
+        /*
+        * Send 'P' i.e. calibration conductivity to micro-controller and write response
+        * to rich text and change button color
+        */
+        private void button29_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("P");
+                Thread.Sleep(20);
+                richTextBox1.Text = connectPort.ReadExisting();
+            }
+        }
     }
 }

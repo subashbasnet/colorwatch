@@ -146,9 +146,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(26, 210);
+            this.button4.Location = new System.Drawing.Point(26, 308);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.Size = new System.Drawing.Size(75, 33);
             this.button4.TabIndex = 4;
             this.button4.Text = "LED Test";
             this.button4.UseVisualStyleBackColor = true;
@@ -343,12 +343,13 @@
             chartArea1.BorderWidth = 0;
             chartArea1.Name = "ChartArea1";
             chartArea1.Position.Auto = false;
-            chartArea1.Position.Height = 80F;
-            chartArea1.Position.Width = 85F;
+            chartArea1.Position.Height = 90F;
+            chartArea1.Position.Width = 90F;
             chartArea1.Position.X = 5F;
-            chartArea1.Position.Y = 20F;
+            chartArea1.Position.Y = 10F;
             chartArea1.ShadowColor = System.Drawing.SystemColors.ButtonShadow;
             this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(587, 87);
@@ -358,26 +359,31 @@
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
             series1.Color = System.Drawing.Color.HotPink;
             series1.CustomProperties = "LabelStyle=BottomRight";
+            series1.IsVisibleInLegend = false;
             series1.Legend = "Legend1";
             series1.Name = "Border_Pink";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
             series2.Color = System.Drawing.Color.Green;
+            series2.IsVisibleInLegend = false;
             series2.Legend = "Legend1";
             series2.Name = "Border_Green";
             series3.ChartArea = "ChartArea1";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
             series3.Color = System.Drawing.Color.Yellow;
+            series3.IsVisibleInLegend = false;
             series3.Legend = "Legend1";
             series3.Name = "Border_Yellow";
             series4.ChartArea = "ChartArea1";
             series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
             series4.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            series4.IsVisibleInLegend = false;
             series4.Legend = "Legend1";
             series4.Name = "Border_Clear";
             series5.ChartArea = "ChartArea1";
             series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series5.Color = System.Drawing.Color.Red;
+            series5.IsVisibleInLegend = false;
             series5.Legend = "Legend1";
             series5.Name = "h";
             this.chart1.Series.Add(series1);
@@ -673,28 +679,31 @@
             // 
             this.button28.Location = new System.Drawing.Point(3, 6);
             this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(158, 29);
+            this.button28.Size = new System.Drawing.Size(158, 40);
             this.button28.TabIndex = 38;
             this.button28.Text = "Measuring Conductivity";
             this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
             // 
             // button29
             // 
-            this.button29.Location = new System.Drawing.Point(3, 41);
+            this.button29.Location = new System.Drawing.Point(3, 52);
             this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(158, 28);
+            this.button29.Size = new System.Drawing.Size(158, 42);
             this.button29.TabIndex = 39;
             this.button29.Text = "Calibration Conductivity";
             this.button29.UseVisualStyleBackColor = true;
+            this.button29.Click += new System.EventHandler(this.button29_Click);
             // 
             // button30
             // 
-            this.button30.Location = new System.Drawing.Point(3, 75);
+            this.button30.Location = new System.Drawing.Point(109, 308);
             this.button30.Name = "button30";
-            this.button30.Size = new System.Drawing.Size(158, 23);
+            this.button30.Size = new System.Drawing.Size(80, 33);
             this.button30.TabIndex = 40;
-            this.button30.Text = "Self test";
+            this.button30.Text = "Self Test";
             this.button30.UseVisualStyleBackColor = true;
+            this.button30.Click += new System.EventHandler(this.button30_Click);
             // 
             // panel3
             // 
@@ -707,7 +716,7 @@
             this.panel3.Controls.Add(this.textBox13);
             this.panel3.Controls.Add(this.button24);
             this.panel3.Controls.Add(this.textBox14);
-            this.panel3.Location = new System.Drawing.Point(26, 238);
+            this.panel3.Location = new System.Drawing.Point(26, 225);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(308, 77);
             this.panel3.TabIndex = 41;
@@ -729,7 +738,6 @@
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel5.Controls.Add(this.button28);
             this.panel5.Controls.Add(this.button29);
-            this.panel5.Controls.Add(this.button30);
             this.panel5.Location = new System.Drawing.Point(398, 245);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(168, 105);
@@ -739,9 +747,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 528);
+            this.ClientSize = new System.Drawing.Size(955, 534);
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel4);
+            this.Controls.Add(this.button30);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.button21);
             this.Controls.Add(this.panel2);

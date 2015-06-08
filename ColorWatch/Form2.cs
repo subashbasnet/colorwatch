@@ -18,10 +18,12 @@ namespace ColorWatch
         public SerialPort connectPort { get; set; }
         private String[] rLabData;
         Boolean firstEntryForGraph = true;
+        Boolean onLoad = true;
         private int count;
         public Form2()
         {
             InitializeComponent();
+            chart1.Series[0].Color = Color.Black;
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
@@ -177,6 +179,11 @@ namespace ColorWatch
                 {
                     if (display.Length > 0)
                     {
+                        if(onLoad){
+                            chart1.Series[0].Points.Clear(); //to clear the initial point set to show the chart
+                            chart1.Series[0].Color = Color.Black;
+                            onLoad = false;
+                        }
                         //richTextBox1.Text = manualStartResponse;
                         string[] manualStartColors = BaseFunctions.manualStart(display);
                         //for input low
@@ -269,7 +276,7 @@ namespace ColorWatch
                     //solution to data point addition at end by sorting
                     //chart1.Series[0].Sort(PointSortOrder.Ascending, "X");
                     //chart1.DataManipulator.Sort(System.Windows.Forms.DataVisualization.Charting.PointSortOrder.Ascending, chart1.Series[0]);
-                    
+
                     //Perform a time consuming operation and report progress
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
@@ -350,6 +357,7 @@ namespace ColorWatch
                 backgroundWorker1.CancelAsync();
                 Thread.Sleep(100);
                 chart1.Series[0].Points.Clear();
+                Form2_Load(sender, e);
             }
         }
 
@@ -365,6 +373,8 @@ namespace ColorWatch
                 connectPort.Write("B");
                 Thread.Sleep(2000);
                 chart1.Series[0].Points.Clear();
+                chart1.Series[0].Color = Color.Transparent;
+                chart1.Series[0].Points.AddXY(15, -40);
                 //connectPort.Close();
                 //button3.Text = "Connect";
                 //button3.BackColor = default(Color);
@@ -376,6 +386,15 @@ namespace ColorWatch
                 button6.BackColor = default(Color);
                 //comboBox1.DataSource = BaseFunctions.GetAllPorts();
             }
+        }
+
+        /**
+         * get's called only after the constructor
+         * **/
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            chart1.Series[0].Color = Color.Transparent;
+            chart1.Series[0].Points.AddXY(15, -40);
         }
     }
 }

@@ -225,10 +225,10 @@
             chartArea1.CursorY.IsUserEnabled = true;
             chartArea1.Name = "ChartArea1";
             chartArea1.Position.Auto = false;
-            chartArea1.Position.Height = 85F;
-            chartArea1.Position.Width = 85F;
-            chartArea1.Position.X = 10F;
-            chartArea1.Position.Y = 12F;
+            chartArea1.Position.Height = 90F;
+            chartArea1.Position.Width = 90F;
+            chartArea1.Position.X = 5F;
+            chartArea1.Position.Y = 5F;
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
@@ -300,6 +300,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form2";
             this.Text = "ColorWatch";
+            this.Load += new System.EventHandler(this.Form2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
