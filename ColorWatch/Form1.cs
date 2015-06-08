@@ -17,7 +17,7 @@ namespace ColorWatch
     public partial class Form1 : Form
     {
         public SerialPort connectPort { get; set; }
-        private String trInputNumber;
+        private String trInputNumber, tpInputNumber, tcInputNumber, twInputNumber;
         private Boolean openMeasureForm { get; set; }
         private Boolean dontCalibrate { get; set; }
         private String calibrationData;
@@ -29,6 +29,7 @@ namespace ColorWatch
         public Form1()
         {
             InitializeComponent();
+            domainUpDown1.SelectedIndex = 0;
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             richTextBox1.Enabled = false;
             textBox6.Enabled = false;
@@ -154,6 +155,75 @@ namespace ColorWatch
         }
 
         /*
+         * Send 'K' to micro-controller and write response
+         * to rich text and change button color
+         */
+        private void button26_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("K");
+                Thread.Sleep(20);
+                string digitalOuptResponse = connectPort.ReadExisting();
+                richTextBox1.Text = digitalOuptResponse;
+                if (digitalOuptResponse.Equals("1"))
+                {
+                    button26.BackColor = Color.Green;
+                }
+                else
+                {
+                    button26.BackColor = default(Color);
+                }
+            }
+        }
+
+        /*
+         * Send 'R' to micro-controller and write response
+         * to rich text and change button color
+         */
+        private void button27_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("R");
+                Thread.Sleep(20);
+                string digitalOuptResponse = connectPort.ReadExisting();
+                richTextBox1.Text = digitalOuptResponse;
+                if (digitalOuptResponse.Equals("1"))
+                {
+                    button27.BackColor = Color.Green;
+                }
+                else
+                {
+                    button27.BackColor = default(Color);
+                }
+            }
+        }
+
+        //working on receiving response
+        /*
+         * Send 'E<1> or E<2>' to micro-controller and write response
+         * to rich text and change button color
+         */
+        private void button25_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("E<" + domainUpDown1.Text + ">");
+                Thread.Sleep(20);
+                string digitalOuptResponse = connectPort.ReadExisting();
+                richTextBox1.Text = digitalOuptResponse;
+                if (digitalOuptResponse.Equals("0"))
+                {
+                    button25.BackColor = Color.Green;
+                }
+                else {
+                    button25.BackColor = default(Color);
+                }
+            }
+        }
+
+        /*
          * Send 'TR' to micro-controller and write response
          * to rich text
          */
@@ -167,35 +237,138 @@ namespace ColorWatch
             }
         }
 
-        /**
-         * Controls the length of the text to be 3 in trNumber input box.
-         * Doesn't allow any characters besides the number.
-         * **/
+        /*
+         * Send 'TP' to micro-controller and write response
+         * to rich text
+         */
+        private void button22_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("TP<" + textBox12.Text.Trim() + ">");
+                Thread.Sleep(20);
+                richTextBox1.Text = connectPort.ReadExisting();
+            }
+        }
 
+        /*
+         * Send 'TC' to micro-controller and write response
+         * to rich text
+         */
+        private void button24_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("TC<" + textBox14.Text.Trim() + ">");
+                Thread.Sleep(20);
+                richTextBox1.Text = connectPort.ReadExisting();
+            }
+        }
+
+        /*
+         * Send 'TW' to micro-controller and write response
+         * to rich text
+         */
+        private void button23_Click(object sender, EventArgs e)
+        {
+            if (button1.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("TW<" + textBox13.Text.Trim() + ">");
+                Thread.Sleep(20);
+                richTextBox1.Text = connectPort.ReadExisting();
+            }
+        }
+
+        /**
+         * Event called on Reference-timer text changed
+         * **/
         private void trNumberInputBox_TextChanged(object sender, EventArgs e)
         {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(trNumberInputBox.Text, "^[0-9]+$")
-                || trNumberInputBox.TextLength > 3)//true = not only number in inputtext or inputtext length greater than 3
+            textBoxFilter(trNumberInputBox, "TR");
+        }
+
+        /**
+         * Event called on Probe-timer text changed
+         * **/
+        private void tpInputChanged(object sender, EventArgs e)
+        {
+            textBoxFilter(textBox12, "TP");
+        }
+
+        /**
+         * Event called on Conductivity-timer text changed
+         * **/
+        private void tcInputChanged(object sender, EventArgs e)
+        {
+            textBoxFilter(textBox14, "TC");
+        }
+
+        /**
+         * Event called on PWM-cycle text changed
+         * **/
+        private void twInputChanged(object sender, EventArgs e)
+        {
+            textBoxFilter(textBox13, "TW");
+        }
+
+        /**
+         * Controls the length of the text to be 3 in input box.
+         * Doesn't allow any characters besides the number.
+         * **/
+        public void textBoxFilter(TextBox input, string inputType)
+        {
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(input.Text, "^[0-9]+$")
+                || input.TextLength > 3)//true = not only number in inputtext or inputtext length greater than 3
             {
-                if (trNumberInputBox.TextLength > 1)
+                if (input.TextLength > 1)
                 {//greater than 1 set inputtext as old data
-                    trNumberInputBox.Text = trInputNumber;
+                    switch (inputType)
+                    {
+                        case "TR":
+                            input.Text = trInputNumber;
+                            break;
+                        case "TP":
+                            input.Text = tpInputNumber;
+                            break;
+                        case "TC":
+                            input.Text = tcInputNumber;
+                            break;
+                        case "TW":
+                            input.Text = twInputNumber;
+                            break;
+                    }
                     //setting cursor at the end for inputext length greater than 1
-                    trNumberInputBox.Select(trNumberInputBox.Text.Length, 0);
+                    input.Select(input.Text.Length, 0);
                 }
                 else
                 {
-                    trNumberInputBox.Text = "";
+                    input.Text = "";
                 }
             }
             else
             {//only number in the inputtext, do nothing but store the data in trInputNumber
-                trInputNumber = trNumberInputBox.Text;
-                if (trNumberInputBox.Text.Length > 1)
+                switch (inputType)
+                {
+                    case "TR":
+                        trInputNumber = input.Text;
+                        break;
+                    case "TP":
+                        tpInputNumber = input.Text;
+                        break;
+                    case "TC":
+                        tcInputNumber = input.Text;
+                        break;
+                    case "TW":
+                        twInputNumber = input.Text;
+                        break;
+                }
+                if (input.Text.Length > 1)
                 {//setting cursor at the end for inputext length greater than 1
-                    trNumberInputBox.Select(trNumberInputBox.Text.Length, 0);
+                    input.Select(input.Text.Length, 0);
                 }
             }
+
         }
 
         /**
@@ -485,7 +658,8 @@ namespace ColorWatch
                     //Start the asynchronous operation.
                     backgroundWorker4.RunWorkerAsync();
                 }
-                else {
+                else
+                {
                     backgroundWorker4.CancelAsync();
                 }
             }
@@ -542,7 +716,7 @@ namespace ColorWatch
                         chart1.Series[4].Points.AddY(BaseFunctions.hValue(manualStartResponseData));
                         //richTextBox1.Text = "Xmax----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
                         //richTextBox1.Text = "Xmax----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString() +
-                         //   "elapsed milli seconds----->" + sw.ElapsedMilliseconds;
+                        //   "elapsed milli seconds----->" + sw.ElapsedMilliseconds;
                     }
                 }
             }
@@ -769,5 +943,6 @@ namespace ColorWatch
         {
 
         }
+
     }
 }

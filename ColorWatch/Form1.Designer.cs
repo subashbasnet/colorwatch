@@ -81,9 +81,28 @@
             this.button21 = new System.Windows.Forms.Button();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker4 = new System.ComponentModel.BackgroundWorker();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.button22 = new System.Windows.Forms.Button();
+            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.button23 = new System.Windows.Forms.Button();
+            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.button24 = new System.Windows.Forms.Button();
+            this.button25 = new System.Windows.Forms.Button();
+            this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
+            this.button26 = new System.Windows.Forms.Button();
+            this.button27 = new System.Windows.Forms.Button();
+            this.button28 = new System.Windows.Forms.Button();
+            this.button29 = new System.Windows.Forms.Button();
+            this.button30 = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -98,10 +117,11 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(109, 38);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(117, 21);
             this.comboBox1.TabIndex = 1;
             // 
             // button2
@@ -136,18 +156,18 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(26, 238);
+            this.button5.Location = new System.Drawing.Point(10, 10);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 35);
+            this.button5.Size = new System.Drawing.Size(97, 25);
             this.button5.TabIndex = 5;
-            this.button5.Text = "Referenz Time Data";
+            this.button5.Text = "Rererencetimer";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // richTextBox1
             // 
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(26, 279);
+            this.richTextBox1.Location = new System.Drawing.Point(26, 358);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(540, 155);
             this.richTextBox1.TabIndex = 7;
@@ -156,14 +176,14 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 432);
+            this.label1.Location = new System.Drawing.Point(23, 518);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 8;
             // 
             // trNumberInputBox
             // 
-            this.trNumberInputBox.Location = new System.Drawing.Point(109, 246);
+            this.trNumberInputBox.Location = new System.Drawing.Point(113, 15);
             this.trNumberInputBox.Name = "trNumberInputBox";
             this.trNumberInputBox.Size = new System.Drawing.Size(47, 20);
             this.trNumberInputBox.TabIndex = 9;
@@ -201,9 +221,9 @@
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(850, 418);
+            this.button12.Location = new System.Drawing.Point(850, 477);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(75, 23);
+            this.button12.Size = new System.Drawing.Size(75, 27);
             this.button12.TabIndex = 16;
             this.button12.Text = "Measure";
             this.button12.UseVisualStyleBackColor = true;
@@ -555,11 +575,174 @@
             this.backgroundWorker4.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker4_ProgressChanged);
             this.backgroundWorker4.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker4_RunWorkerCompleted_1);
             // 
+            // textBox12
+            // 
+            this.textBox12.Location = new System.Drawing.Point(250, 12);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(47, 20);
+            this.textBox12.TabIndex = 29;
+            this.textBox12.TextChanged += new System.EventHandler(this.tpInputChanged);
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(169, 7);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(75, 28);
+            this.button22.TabIndex = 28;
+            this.button22.Text = "Probetimer";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
+            // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(250, 43);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(47, 20);
+            this.textBox13.TabIndex = 31;
+            this.textBox13.TextChanged += new System.EventHandler(this.twInputChanged);
+            // 
+            // button23
+            // 
+            this.button23.Location = new System.Drawing.Point(169, 38);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(75, 28);
+            this.button23.TabIndex = 30;
+            this.button23.Text = "PWM_cycle";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.Click += new System.EventHandler(this.button23_Click);
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(113, 41);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.Size = new System.Drawing.Size(47, 20);
+            this.textBox14.TabIndex = 33;
+            this.textBox14.TextChanged += new System.EventHandler(this.tcInputChanged);
+            // 
+            // button24
+            // 
+            this.button24.Location = new System.Drawing.Point(10, 41);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(97, 25);
+            this.button24.TabIndex = 32;
+            this.button24.Text = "Conductivitytimer";
+            this.button24.UseVisualStyleBackColor = true;
+            this.button24.Click += new System.EventHandler(this.button24_Click);
+            // 
+            // button25
+            // 
+            this.button25.Location = new System.Drawing.Point(8, 13);
+            this.button25.Name = "button25";
+            this.button25.Size = new System.Drawing.Size(88, 25);
+            this.button25.TabIndex = 34;
+            this.button25.Text = "Digital output";
+            this.button25.UseVisualStyleBackColor = true;
+            this.button25.Click += new System.EventHandler(this.button25_Click);
+            // 
+            // domainUpDown1
+            // 
+            this.domainUpDown1.Items.Add("1");
+            this.domainUpDown1.Items.Add("2");
+            this.domainUpDown1.Location = new System.Drawing.Point(107, 16);
+            this.domainUpDown1.Name = "domainUpDown1";
+            this.domainUpDown1.ReadOnly = true;
+            this.domainUpDown1.Size = new System.Drawing.Size(53, 20);
+            this.domainUpDown1.TabIndex = 35;
+            // 
+            // button26
+            // 
+            this.button26.Location = new System.Drawing.Point(8, 46);
+            this.button26.Name = "button26";
+            this.button26.Size = new System.Drawing.Size(88, 35);
+            this.button26.TabIndex = 36;
+            this.button26.Text = "Unfiltered mode";
+            this.button26.UseVisualStyleBackColor = true;
+            this.button26.Click += new System.EventHandler(this.button26_Click);
+            // 
+            // button27
+            // 
+            this.button27.Location = new System.Drawing.Point(104, 45);
+            this.button27.Name = "button27";
+            this.button27.Size = new System.Drawing.Size(67, 36);
+            this.button27.TabIndex = 37;
+            this.button27.Text = "Raw Data Output";
+            this.button27.UseVisualStyleBackColor = true;
+            this.button27.Click += new System.EventHandler(this.button27_Click);
+            // 
+            // button28
+            // 
+            this.button28.Location = new System.Drawing.Point(3, 6);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(158, 29);
+            this.button28.TabIndex = 38;
+            this.button28.Text = "Measuring Conductivity";
+            this.button28.UseVisualStyleBackColor = true;
+            // 
+            // button29
+            // 
+            this.button29.Location = new System.Drawing.Point(3, 41);
+            this.button29.Name = "button29";
+            this.button29.Size = new System.Drawing.Size(158, 28);
+            this.button29.TabIndex = 39;
+            this.button29.Text = "Calibration Conductivity";
+            this.button29.UseVisualStyleBackColor = true;
+            // 
+            // button30
+            // 
+            this.button30.Location = new System.Drawing.Point(3, 75);
+            this.button30.Name = "button30";
+            this.button30.Size = new System.Drawing.Size(158, 23);
+            this.button30.TabIndex = 40;
+            this.button30.Text = "Self test";
+            this.button30.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.button5);
+            this.panel3.Controls.Add(this.trNumberInputBox);
+            this.panel3.Controls.Add(this.button22);
+            this.panel3.Controls.Add(this.textBox12);
+            this.panel3.Controls.Add(this.button23);
+            this.panel3.Controls.Add(this.textBox13);
+            this.panel3.Controls.Add(this.button24);
+            this.panel3.Controls.Add(this.textBox14);
+            this.panel3.Location = new System.Drawing.Point(26, 238);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(308, 77);
+            this.panel3.TabIndex = 41;
+            // 
+            // panel4
+            // 
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel4.Controls.Add(this.button25);
+            this.panel4.Controls.Add(this.domainUpDown1);
+            this.panel4.Controls.Add(this.button26);
+            this.panel4.Controls.Add(this.button27);
+            this.panel4.Location = new System.Drawing.Point(587, 407);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(182, 97);
+            this.panel4.TabIndex = 42;
+            // 
+            // panel5
+            // 
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.button28);
+            this.panel5.Controls.Add(this.button29);
+            this.panel5.Controls.Add(this.button30);
+            this.panel5.Location = new System.Drawing.Point(398, 245);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(168, 105);
+            this.panel5.TabIndex = 43;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(943, 453);
+            this.ClientSize = new System.Drawing.Size(955, 528);
+            this.Controls.Add(this.panel5);
+            this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.button21);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.button15);
@@ -575,10 +758,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
-            this.Controls.Add(this.trNumberInputBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -594,6 +775,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -646,6 +831,22 @@
         private System.Windows.Forms.Button button21;
         private System.ComponentModel.BackgroundWorker backgroundWorker3;
         private System.ComponentModel.BackgroundWorker backgroundWorker4;
+        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.TextBox textBox14;
+        private System.Windows.Forms.Button button24;
+        private System.Windows.Forms.Button button25;
+        private System.Windows.Forms.DomainUpDown domainUpDown1;
+        private System.Windows.Forms.Button button26;
+        private System.Windows.Forms.Button button27;
+        private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.Button button29;
+        private System.Windows.Forms.Button button30;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panel5;
     }
 }
 
