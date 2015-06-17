@@ -17,9 +17,10 @@ namespace ColorWatch
     {
         public SerialPort connectPort { get; set; }
         private String[] rLabData;
-        Boolean firstEntryForGraph = true;
+        //Boolean firstEntryForGraph = true;
+        //Boolean firstEntryWriteG = true;
         Boolean onLoad = true;
-        private int count;
+        //private int count;
         public Form2()
         {
             InitializeComponent();
@@ -27,6 +28,10 @@ namespace ColorWatch
             comboBox1.DataSource = BaseFunctions.GetAllPorts();
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
+            backgroundWorker2.WorkerReportsProgress = true;
+            backgroundWorker2.WorkerSupportsCancellation = true;
+            //richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            //richTextBox1.ScrollToCaret();
         }
 
         /**
@@ -34,7 +39,7 @@ namespace ColorWatch
          * **/
         private void button3_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker1.IsBusy != true) //otherwise it shows exception of port closed while 
+            if (backgroundWorker1.IsBusy != true && backgroundWorker2.IsBusy != true) //otherwise it shows exception of port closed while 
             {                                     //while background process is running
                 if (comboBox1.Items.Count < 1)
                 { //if no items then connection cannot be done
@@ -52,6 +57,15 @@ namespace ColorWatch
                             button3.Text = "Disconnect";
                             button3.BackColor = Color.Green;
                             label2.Text = "";
+                            if (backgroundWorker2.IsBusy != true)
+                            {
+                                //Start the asynchronous operation.
+                                backgroundWorker2.RunWorkerAsync();
+                            }
+                            else
+                            {
+                                backgroundWorker2.CancelAsync();
+                            }
                         }
                         catch (Exception)
                         {
@@ -61,13 +75,19 @@ namespace ColorWatch
                         }
                     }
                     else
-                    {   //Disconnect pressed
+                    {
+                        //Disconnect pressed
                         connectPort.Close();
                         button3.Text = "Connect";
                         label2.Text = "";
                         button3.BackColor = default(Color);
+                        //firstEntryWriteG = true;
                     }
                 }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Please Press 'Stop' before Disconnect");
             }
         }
 
@@ -172,28 +192,27 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
-                connectPort.Write("S");
-                Thread.Sleep(2000);
+                //connectPort.Write("S");
+                //Thread.Sleep(2000);
                 String display = connectPort.ReadExisting();
                 if (display != null)
                 {
                     if (display.Length > 0)
                     {
-                        if(onLoad){
+                        if (onLoad)
+                        {
                             chart1.Series[0].Points.Clear(); //to clear the initial point set to show the chart
                             chart1.Series[0].Color = Color.Black;
                             onLoad = false;
                         }
-                        //richTextBox1.Text = manualStartResponse;
-                        string[] manualStartColors = BaseFunctions.manualStart(display);
+                        //string[] manualStartColors = BaseFunctions.manualStart(display);
                         //for input low
-                        inputLow(manualStartColors[0]);
+                        //inputLow(manualStartColors[0]);
                         //for D01(digital output measurement input one) 
                         //and D02(digital output measurement input two)
-                        digitalOutputMeasurement(manualStartColors[1]);
-                        rLabData = BaseFunctions.RLab(display);
-                        //richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + display;
-                        firstEntryForGraph = true;
+                        //digitalOutputMeasurement(manualStartColors[1]);
+                        //rLabData = BaseFunctions.RLab(display);
+                        //firstEntryForGraph = true;
                         if (backgroundWorker1.IsBusy != true)
                         {
                             //Start the asynchronous operation.
@@ -237,21 +256,28 @@ namespace ColorWatch
             if (button3.Text.Equals("Disconnect"))
             {
                 connectPort.Write("W");
-                Thread.Sleep(5);
+                Thread.Sleep(20);//find out correct time for the response capture
+                //System.Windows.Forms.MessageBox.Show(connectPort.ReadExisting());
                 String wResponse = connectPort.ReadExisting();
                 if (wResponse != null)
                 {
                     if (wResponse.Length > 0)
                     {
-                        if (BaseFunctions.dataOutWrite(wResponse))
+                        wResponse = BaseFunctions.dataOutWrite(wResponse);
+                        if (wResponse.Equals("true"))
                         {
                             button9.BackColor = Color.Green;
                             button9.Text = "Data Output active";
                         }
-                        else
+                        else if (wResponse.Equals("false"))
                         {
                             button9.BackColor = Color.Red;
                             button9.Text = "Data Output inactive";
+                        }
+                        else
+                        {
+                            button9.BackColor = default(Color);
+                            button9.Text = "Unknown";
                         }
                     }
                 }
@@ -264,7 +290,10 @@ namespace ColorWatch
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 5000; i++)
+            //for (int i = 1; i <= 5000; i++)
+            //{
+            int i = 0;
+            while (true)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -281,40 +310,48 @@ namespace ColorWatch
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
                 }
+                i++;
             }
+            //}
         }
 
         //This event handler updates the progress
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (firstEntryForGraph)
+            //if (firstEntryForGraph)
+            //{
+            //    chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+            //    firstEntryForGraph = false;
+            //}
+            //else
+            //{
+            String manualStartResponseData = connectPort.ReadExisting();
+            if (manualStartResponseData != null)
             {
-                chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
-                firstEntryForGraph = false;
-            }
-            else
-            {
-                String manualStartResponseData = connectPort.ReadExisting();
-                if (manualStartResponseData != null)
+                if (manualStartResponseData.Length > 0)
                 {
-                    if (manualStartResponseData.Length > 0)
+                    //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
+                    //richTextBox1.Text = manualStartResponse;
+                    //string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
+                    //for input low
+                    //inputLow(manualStartColors[0]);
+                    //for D01(digital output measurement input one) 
+                    //and D02(digital output measurement input two)
+                    //digitalOutputMeasurement(manualStartColors[1]);
+                    //richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + manualStartResponseData;
+                    //firstEntryForDigitalOutput = false;
+                    // }
+                    rLabData = BaseFunctions.RLab(manualStartResponseData);
+                    //chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
+                    //count++;
+                    //richTextBox1.Text = "rLabData[0]-->" + rLabData[0] + "/n  rLabData[1]-->" + rLabData[1]+"/n  count-->"+count;
+                    //new code
+                    double n0;
+                    bool isNumeric0 = double.TryParse(rLabData[0], out n0);
+                    double n1;
+                    bool isNumeric1 = double.TryParse(rLabData[1], out n1);
+                    if (isNumeric0 && isNumeric1)
                     {
-                        //if(firstEntryForDigitalOutput){ //setting the digital output colors in buttons only in first entry
-                        //richTextBox1.Text = manualStartResponse;
-                        string[] manualStartColors = BaseFunctions.manualStart(manualStartResponseData);
-                        //for input low
-                        inputLow(manualStartColors[0]);
-                        //for D01(digital output measurement input one) 
-                        //and D02(digital output measurement input two)
-                        digitalOutputMeasurement(manualStartColors[1]);
-                        //richTextBox1.Text = manualStartColors[0] + " and " + manualStartColors[1] + manualStartResponseData;
-                        //firstEntryForDigitalOutput = false;
-                        // }
-                        rLabData = BaseFunctions.RLab(manualStartResponseData);
-                        //chart1.Series[0].Points.AddXY(rLabData[0], rLabData[1]);
-                        count++;
-                        //richTextBox1.Text = "rLabData[0]-->" + rLabData[0] + "/n  rLabData[1]-->" + rLabData[1]+"/n  count-->"+count;
-                        //new code
                         DataPoint dp = chart1.Series[0].Points.FirstOrDefault(p => p.XValue > Double.Parse(rLabData[0]));
                         if (dp != null)
                         {
@@ -327,6 +364,7 @@ namespace ColorWatch
                     }
                 }
             }
+            //}
         }
 
         //This event handler deals with the results of the background operation.
@@ -341,9 +379,10 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
-                connectPort.Write("B");
+                //connectPort.Write("B");
                 //Cancel the asynchronous operation.
                 backgroundWorker1.CancelAsync();
+                backgroundWorker2.CancelAsync();
             }
         }
 
@@ -369,21 +408,22 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
-                backgroundWorker1.CancelAsync();
-                connectPort.Write("B");
-                Thread.Sleep(2000);
+                //backgroundWorker1.CancelAsync();
+                //backgroundWorker2.CancelAsync();
+                //connectPort.Write("B");
+                //Thread.Sleep(2000);
+                richTextBox1.Clear();
                 chart1.Series[0].Points.Clear();
-                chart1.Series[0].Color = Color.Transparent;
-                chart1.Series[0].Points.AddXY(15, -40);
+                Form2_Load(sender, e);
                 //connectPort.Close();
                 //button3.Text = "Connect";
                 //button3.BackColor = default(Color);
-                button4.Text = "Input Low";
-                button4.BackColor = default(Color);
-                button5.Text = "Digital Output Measurement";
-                button5.BackColor = default(Color);
-                button6.Text = "Initial State";
-                button6.BackColor = default(Color);
+                //button4.Text = "Input Low";
+                //button4.BackColor = default(Color);
+                //button5.Text = "Digital Output Measurement";
+                //button5.BackColor = default(Color);
+                //button6.Text = "Initial State";
+                //button6.BackColor = default(Color);
                 //comboBox1.DataSource = BaseFunctions.GetAllPorts();
             }
         }
@@ -395,6 +435,108 @@ namespace ColorWatch
         {
             chart1.Series[0].Color = Color.Transparent;
             chart1.Series[0].Points.AddXY(15, -40);
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //String wResponse = connectPort.ReadExisting();
+            //Thread.Sleep(50);
+            //if (wResponse != null)
+            //{
+            //    if (wResponse.Length > 0)
+            //    {
+            //        if (BaseFunctions.dataOutWrite(wResponse))
+            //        {
+            //            button9.BackColor = Color.Green;
+            //            button9.Text = "Data Output active";
+            //            System.Windows.Forms.MessageBox.Show("Data output active 1");
+            //        }
+            //        else
+            //        {
+            //            connectPort.Write("W");
+            //            wResponse = connectPort.ReadExisting();
+            //            if (wResponse != null)
+            //            {
+            //                if (wResponse.Length > 0)
+            //                {
+            //                    if (BaseFunctions.dataOutWrite(wResponse))
+            //                    {
+            //                        button9.BackColor = Color.Green;
+            //                        button9.Text = "Data Output active";
+            //                        System.Windows.Forms.MessageBox.Show("Data output active 2");
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+            System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
+            int i = 0;
+            while (true)
+            {
+                //for (int i = 1; i <= 10000; i++)
+                //{
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else
+                {
+                    //Perform a time consuming operation and report progress
+                    System.Threading.Thread.Sleep(500);
+                    worker.ReportProgress(i * 10);
+                }
+                // }
+                i++;
+            }
+        }
+
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+            //if(firstentrywriteg){
+            //    connectport.write("g");
+            //    firstentrywriteg = false;
+            //}
+            string responseData = connectPort.ReadExisting();
+            if (responseData != null)
+            {
+                if (responseData.Length > 0)
+                {
+                    String[] extractedSauberData = BaseFunctions.extractSauberCondition(responseData);
+                    if (extractedSauberData != null)
+                    {
+                        if (extractedSauberData[0].Equals("0"))
+                        {
+                            label3.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            label3.BackColor = Color.Red;//1
+                        }
+                        if (extractedSauberData[1].Equals("0"))
+                        {
+                            label4.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            label4.BackColor = Color.Red;//1
+                        }
+                        richTextBox1.AppendText(responseData);
+                        richTextBox1.ScrollToCaret();
+                    }
+                    //richTextBox1.AppendText(responseData);
+                    ////richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                    //richTextBox1.ScrollToCaret();
+                }
+            }
+        }
+
+        private void backgroundWorker2_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
+        {
+
         }
     }
 }

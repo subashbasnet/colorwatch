@@ -51,6 +51,10 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.button13 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,7 +70,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(484, 344);
+            this.button1.Location = new System.Drawing.Point(484, 510);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(62, 23);
             this.button1.TabIndex = 1;
@@ -76,12 +80,13 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(109, 87);
+            this.button11.Location = new System.Drawing.Point(12, 87);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 32);
+            this.button11.Size = new System.Drawing.Size(91, 32);
             this.button11.TabIndex = 16;
             this.button11.Text = "Manual Stop";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Visible = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // button10
@@ -92,6 +97,7 @@
             this.button10.TabIndex = 15;
             this.button10.Text = "Manual Start";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Visible = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button8
@@ -146,7 +152,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 357);
+            this.label2.Location = new System.Drawing.Point(12, 536);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 22;
@@ -154,49 +160,52 @@
             // button4
             // 
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(15, 125);
+            this.button4.Location = new System.Drawing.Point(106, 87);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(88, 23);
+            this.button4.Size = new System.Drawing.Size(88, 32);
             this.button4.TabIndex = 23;
             this.button4.Text = "Input Low";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
             // 
             // button5
             // 
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(15, 155);
+            this.button5.Location = new System.Drawing.Point(12, 125);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(88, 43);
+            this.button5.Size = new System.Drawing.Size(91, 43);
             this.button5.TabIndex = 24;
             this.button5.Text = "Digital Output Measurement";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
             // 
             // button6
             // 
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(109, 155);
+            this.button6.Location = new System.Drawing.Point(106, 125);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 43);
+            this.button6.Size = new System.Drawing.Size(88, 43);
             this.button6.TabIndex = 25;
             this.button6.Text = "Initial State";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Visible = false;
             // 
             // button9
             // 
             this.button9.BackColor = System.Drawing.SystemColors.Control;
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button9.Location = new System.Drawing.Point(93, 212);
+            this.button9.Location = new System.Drawing.Point(106, 155);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(101, 41);
+            this.button9.Size = new System.Drawing.Size(88, 62);
             this.button9.TabIndex = 28;
             this.button9.Text = "Data Output Low";
             this.button9.UseVisualStyleBackColor = false;
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(12, 212);
+            this.button12.Location = new System.Drawing.Point(12, 155);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(75, 41);
+            this.button12.Size = new System.Drawing.Size(91, 62);
             this.button12.TabIndex = 27;
             this.button12.Text = "Data Out Write";
             this.button12.UseVisualStyleBackColor = true;
@@ -262,23 +271,62 @@
             this.button13.TabIndex = 30;
             this.button13.Text = "Clear";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Visible = false;
             this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(12, 269);
+            this.button14.Location = new System.Drawing.Point(9, 229);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(75, 48);
+            this.button14.Size = new System.Drawing.Size(91, 67);
             this.button14.TabIndex = 31;
             this.button14.Text = "RESET";
             this.button14.UseVisualStyleBackColor = true;
             this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
+            // backgroundWorker2
+            // 
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
+            this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted_1);
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(12, 346);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(454, 187);
+            this.richTextBox1.TabIndex = 32;
+            this.richTextBox1.Text = "";
+            // 
+            // label3
+            // 
+            this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label3.Location = new System.Drawing.Point(12, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(88, 55);
+            this.label3.TabIndex = 33;
+            this.label3.Text = "Leitung Sauber";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label4.Location = new System.Drawing.Point(106, 87);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 55);
+            this.label4.TabIndex = 34;
+            this.label4.Text = "Wasser Sauber";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(576, 379);
+            this.ClientSize = new System.Drawing.Size(576, 556);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button13);
             this.Controls.Add(this.chart1);
@@ -328,5 +376,9 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -116,17 +116,31 @@ namespace ColorWatch
             if (button1.Text.Equals("Disconnect"))
             {
                 connectPort.Write("W");
-                Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
-                if (BaseFunctions.dataOutWrite(richTextBox1.Text))
+                Thread.Sleep(20);//find out correct time for the response capture
+                //System.Windows.Forms.MessageBox.Show(connectPort.ReadExisting());
+                String wResponse = connectPort.ReadExisting();
+                richTextBox1.AppendText(wResponse); 
+                if (wResponse != null)
                 {
-                    button9.BackColor = Color.Green;
-                    button9.Text = "Data Output active";
-                }
-                else
-                {
-                    button9.BackColor = Color.Red;
-                    button9.Text = "Data Output inactive";
+                    if (wResponse.Length > 0)
+                    {
+                        wResponse = BaseFunctions.dataOutWrite(wResponse);
+                        if (wResponse.Equals("true"))
+                        {
+                            button9.BackColor = Color.Green;
+                            button9.Text = "Data Output active";
+                        }
+                        else if (wResponse.Equals("false"))
+                        {
+                            button9.BackColor = Color.Red;
+                            button9.Text = "Data Output inactive";
+                        }
+                        else
+                        {
+                            button9.BackColor = default(Color);
+                            button9.Text = "Unknown";
+                        }
+                    }
                 }
             }
         }
@@ -213,7 +227,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write("E<" + domainUpDown1.Text + ">");
+                connectPort.Write("E" + domainUpDown1.Text);
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
                 richTextBox1.Text = digitalOuptResponse;
@@ -438,7 +452,8 @@ namespace ColorWatch
                 {
                     if (calibrationData.Length > 0)
                     {
-                        if(onLoad){
+                        if (onLoad)
+                        {
                             chart1.Series[0].Points.Clear(); //to clear the initial point set to show the chart
                             chart1.Series[0].Color = Color.Pink;
                             onLoad = false;
@@ -995,7 +1010,7 @@ namespace ColorWatch
         {
             if (button1.Text.Equals("Disconnect"))
             {
-                connectPort.Write("A");
+                connectPort.Write("G");
                 Thread.Sleep(20);
                 richTextBox1.Text = connectPort.ReadExisting();
             }

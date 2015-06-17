@@ -64,16 +64,24 @@ namespace ColorWatch
          * @return boolean, true for W = 1 
          * and false for W=0.
          * **/
-        public static Boolean dataOutWrite(String dataOutputResponse)
+        public static String dataOutWrite(String dataOutputResponse)
         {
-            if (dataOutputResponse.Substring(dataOutputResponse.IndexOf("<") + 1,
-                1).Equals("0"))
+            int dataOutResponseIndex = dataOutputResponse.IndexOf("Data_Output<");
+            if (dataOutResponseIndex > 0)
             {
-                return false;
+                if (dataOutputResponse.Substring(dataOutResponseIndex + 12,
+                1).Equals("0"))
+                {
+                    return "true";
+                }
+                else
+                {
+                    return "false";
+                }
             }
             else
             {
-                return true;
+                return "unknown";
             }
         }
 
@@ -175,11 +183,14 @@ namespace ColorWatch
         public static string[] RLab(string rLab)
         {
             string[] abValue = new string[2];
-            int manualStartAPosition = rLab.IndexOf("a<");
-            int manualStartBPosition = rLab.IndexOf("b<");
-            int manualStartHPosition = rLab.IndexOf("h<");
-            abValue[0] = rLab.Substring(manualStartAPosition + 2, (manualStartBPosition - 2) - (manualStartAPosition + 2));
-            abValue[1] = rLab.Substring(manualStartBPosition + 2, (manualStartHPosition - 2) - (manualStartBPosition + 2));
+            int manualStartAPosition = rLab.IndexOf(">a<");
+            int manualStartBPosition = rLab.IndexOf(">b<");
+            int manualStartHPosition = rLab.IndexOf(">h<");
+            if (manualStartAPosition > 0 && manualStartBPosition > 0 && manualStartHPosition > 0)
+            {
+                abValue[0] = rLab.Substring(manualStartAPosition + 3, (manualStartBPosition) - (manualStartAPosition + 3));
+                abValue[1] = rLab.Substring(manualStartBPosition + 3, (manualStartHPosition) - (manualStartBPosition + 3));
+            }
             return abValue;
         }
 
@@ -199,6 +210,7 @@ namespace ColorWatch
          *Extract Border_Pink, Border_Green, Border_Yellow, Border_Clear values
          * 
          */
+        //this must be wrong as last index for ">" taken previously, should be changed now
         public static double[] extractBorderValues(String listenReponse)
         {
             int length = listenReponse.Length;
@@ -212,6 +224,53 @@ namespace ColorWatch
             hValues[2] = double.Parse(listenReponse.Substring(borderYellow + 14, (borderClear - 1) - (borderYellow + 14)));
             hValues[3] = double.Parse(listenReponse.Substring(borderClear + 13, listenReponse.LastIndexOf(">") - (borderClear + 13)));
             return hValues;
+        }
+
+        /**
+         *Extract Probetimer, Conducttimer, pwm_cycle, 
+         *conductivity_abweichung, conductivity_data_average values
+         */
+        public static double[] extractTimerValues(String listenReponse)
+        {
+            int length = listenReponse.Length;
+            double[] timerValues = new double[6];
+            int indexOfReferenceTimer = listenReponse.IndexOf("Referencetimer");
+            int indexOfProbeTimer = listenReponse.IndexOf("Probetimer");
+            int indexOfConductTimer = listenReponse.IndexOf("Conducttimer");
+            int indexOfPwmCycle = listenReponse.IndexOf("pwm_cycle");
+            int indexOfConductivityAbweichung = listenReponse.IndexOf("conductivity_abweichung");
+            int indexOfConductivityDataAverage = listenReponse.IndexOf("conductivity_data_average");
+            timerValues[0] = double.Parse(listenReponse.Substring(indexOfReferenceTimer + 15, (indexOfProbeTimer - 1) - (indexOfReferenceTimer + 15)));
+            timerValues[1] = double.Parse(listenReponse.Substring(indexOfProbeTimer + 11, (indexOfConductTimer - 1) - (indexOfProbeTimer + 11)));
+            timerValues[2] = double.Parse(listenReponse.Substring(indexOfConductTimer + 13, (indexOfPwmCycle - 1) - (indexOfConductTimer + 13)));
+            timerValues[3] = double.Parse(listenReponse.Substring(indexOfPwmCycle + 10, (indexOfConductivityAbweichung - 1) - (indexOfPwmCycle + 10)));
+            timerValues[4] = double.Parse(listenReponse.Substring(indexOfConductivityAbweichung + 24, (indexOfConductivityDataAverage - 1) - (indexOfConductivityAbweichung + 24)));
+            timerValues[5] = double.Parse(listenReponse.Substring(indexOfConductivityDataAverage + 26, listenReponse.LastIndexOf(">") - (indexOfConductivityDataAverage + 26)));
+            return timerValues;
+        }
+
+        /**
+         * Extract sauber condition of manual start and measuring_conductivity
+         * 
+         * **/
+        public static String[] extractSauberCondition(String responseData)
+        {
+            String[] continuousResponse = new String[2];
+            int indexOfDigitalInputLightness = responseData.IndexOf("digital_input_lightness");
+            int indexOfDigitalOutputMeasurementConducitivty = responseData.IndexOf("digital_output_measurement_conductivity");
+            int indexOfDigitalOutputMeasurementColour = responseData.IndexOf("digital_output_measurement_colour");
+            int lastIndexOfDigitalOutputError = responseData.LastIndexOf("digital_output_error");
+            if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementConducitivty > 0
+                && indexOfDigitalOutputMeasurementColour > 0 && lastIndexOfDigitalOutputError > 0)
+            {
+                continuousResponse[0] = responseData.Substring(indexOfDigitalInputLightness + 24, (indexOfDigitalOutputMeasurementColour - 1) - (indexOfDigitalInputLightness + 24));
+                continuousResponse[1] = responseData.Substring(indexOfDigitalOutputMeasurementConducitivty + 40, (lastIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementConducitivty + 40));
+                return continuousResponse;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /**
@@ -252,7 +311,7 @@ namespace ColorWatch
                 int indexOfSecondOccurrence = GetNthIndex(number, '.', 2);
                 return number.Substring(0, indexOfSecondOccurrence);
             }
-            return number.Trim(); 
+            return number.Trim();
         }
     }
 }

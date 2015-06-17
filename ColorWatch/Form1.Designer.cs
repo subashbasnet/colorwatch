@@ -95,8 +95,12 @@
             this.button29 = new System.Windows.Forms.Button();
             this.button30 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.textBox15 = new System.Windows.Forms.TextBox();
+            this.textBox16 = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -146,9 +150,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(26, 308);
+            this.button4.Location = new System.Drawing.Point(26, 327);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 33);
+            this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 4;
             this.button4.Text = "LED Test";
             this.button4.UseVisualStyleBackColor = true;
@@ -156,9 +160,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(10, 10);
+            this.button5.Location = new System.Drawing.Point(3, 8);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(97, 25);
+            this.button5.Size = new System.Drawing.Size(120, 22);
             this.button5.TabIndex = 5;
             this.button5.Text = "Rererencetimer";
             this.button5.UseVisualStyleBackColor = true;
@@ -183,7 +187,7 @@
             // 
             // trNumberInputBox
             // 
-            this.trNumberInputBox.Location = new System.Drawing.Point(113, 15);
+            this.trNumberInputBox.Location = new System.Drawing.Point(129, 12);
             this.trNumberInputBox.Name = "trNumberInputBox";
             this.trNumberInputBox.Size = new System.Drawing.Size(47, 20);
             this.trNumberInputBox.TabIndex = 9;
@@ -583,7 +587,7 @@
             // 
             // textBox12
             // 
-            this.textBox12.Location = new System.Drawing.Point(250, 12);
+            this.textBox12.Location = new System.Drawing.Point(311, 7);
             this.textBox12.Name = "textBox12";
             this.textBox12.Size = new System.Drawing.Size(47, 20);
             this.textBox12.TabIndex = 29;
@@ -591,9 +595,9 @@
             // 
             // button22
             // 
-            this.button22.Location = new System.Drawing.Point(169, 7);
+            this.button22.Location = new System.Drawing.Point(184, 7);
             this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(75, 28);
+            this.button22.Size = new System.Drawing.Size(121, 25);
             this.button22.TabIndex = 28;
             this.button22.Text = "Probetimer";
             this.button22.UseVisualStyleBackColor = true;
@@ -601,7 +605,7 @@
             // 
             // textBox13
             // 
-            this.textBox13.Location = new System.Drawing.Point(250, 43);
+            this.textBox13.Location = new System.Drawing.Point(311, 37);
             this.textBox13.Name = "textBox13";
             this.textBox13.Size = new System.Drawing.Size(47, 20);
             this.textBox13.TabIndex = 31;
@@ -609,9 +613,9 @@
             // 
             // button23
             // 
-            this.button23.Location = new System.Drawing.Point(169, 38);
+            this.button23.Location = new System.Drawing.Point(184, 38);
             this.button23.Name = "button23";
-            this.button23.Size = new System.Drawing.Size(75, 28);
+            this.button23.Size = new System.Drawing.Size(121, 22);
             this.button23.TabIndex = 30;
             this.button23.Text = "PWM_cycle";
             this.button23.UseVisualStyleBackColor = true;
@@ -619,7 +623,7 @@
             // 
             // textBox14
             // 
-            this.textBox14.Location = new System.Drawing.Point(113, 41);
+            this.textBox14.Location = new System.Drawing.Point(129, 41);
             this.textBox14.Name = "textBox14";
             this.textBox14.Size = new System.Drawing.Size(47, 20);
             this.textBox14.TabIndex = 33;
@@ -627,9 +631,9 @@
             // 
             // button24
             // 
-            this.button24.Location = new System.Drawing.Point(10, 41);
+            this.button24.Location = new System.Drawing.Point(3, 35);
             this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(97, 25);
+            this.button24.Size = new System.Drawing.Size(120, 25);
             this.button24.TabIndex = 32;
             this.button24.Text = "Conductivitytimer";
             this.button24.UseVisualStyleBackColor = true;
@@ -697,9 +701,9 @@
             // 
             // button30
             // 
-            this.button30.Location = new System.Drawing.Point(109, 308);
+            this.button30.Location = new System.Drawing.Point(109, 327);
             this.button30.Name = "button30";
-            this.button30.Size = new System.Drawing.Size(80, 33);
+            this.button30.Size = new System.Drawing.Size(80, 23);
             this.button30.TabIndex = 40;
             this.button30.Text = "Self Test";
             this.button30.UseVisualStyleBackColor = true;
@@ -708,6 +712,10 @@
             // panel3
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.label5);
+            this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.textBox15);
+            this.panel3.Controls.Add(this.textBox16);
             this.panel3.Controls.Add(this.button5);
             this.panel3.Controls.Add(this.trNumberInputBox);
             this.panel3.Controls.Add(this.button22);
@@ -718,8 +726,24 @@
             this.panel3.Controls.Add(this.textBox14);
             this.panel3.Location = new System.Drawing.Point(26, 225);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(308, 77);
+            this.panel3.Size = new System.Drawing.Size(364, 96);
             this.panel3.TabIndex = 41;
+            // 
+            // textBox15
+            // 
+            this.textBox15.Location = new System.Drawing.Point(311, 67);
+            this.textBox15.Name = "textBox15";
+            this.textBox15.ReadOnly = true;
+            this.textBox15.Size = new System.Drawing.Size(47, 20);
+            this.textBox15.TabIndex = 35;
+            // 
+            // textBox16
+            // 
+            this.textBox16.Location = new System.Drawing.Point(129, 66);
+            this.textBox16.Name = "textBox16";
+            this.textBox16.ReadOnly = true;
+            this.textBox16.Size = new System.Drawing.Size(47, 20);
+            this.textBox16.TabIndex = 37;
             // 
             // panel4
             // 
@@ -742,6 +766,24 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(168, 105);
             this.panel5.TabIndex = 43;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 68);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(127, 13);
+            this.label4.TabIndex = 38;
+            this.label4.Text = "Conductivity Abweichung";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(181, 70);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(131, 13);
+            this.label5.TabIndex = 39;
+            this.label5.Text = "Productivity Data Average";
             // 
             // Form1
             // 
@@ -856,6 +898,10 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.TextBox textBox16;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
     }
 }
 
