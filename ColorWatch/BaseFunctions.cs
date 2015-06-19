@@ -180,9 +180,9 @@ namespace ColorWatch
         /**
          * @return array of RLab data i.e. 'a' and 'b' value from manual start i.e. 'S' response
          * **/
-        public static string[] RLab(string rLab)
+        public static string[] RLabForGraphOnly(string rLab)
         {
-            string[] abValue = new string[2];
+            string[] abValue = new string[4];
             int manualStartAPosition = rLab.IndexOf(">a<");
             int manualStartBPosition = rLab.IndexOf(">b<");
             int manualStartHPosition = rLab.IndexOf(">h<");
@@ -190,6 +190,32 @@ namespace ColorWatch
             {
                 abValue[0] = rLab.Substring(manualStartAPosition + 3, (manualStartBPosition) - (manualStartAPosition + 3));
                 abValue[1] = rLab.Substring(manualStartBPosition + 3, (manualStartHPosition) - (manualStartBPosition + 3));
+            }
+            return abValue;
+        }
+
+        /**
+         * @return array of RLab data i.e. 'a' and 'b' value from manual start i.e. 'S' response
+         * **/
+        public static string[] RLabManualStart(string rLab)
+        {
+            string[] abValue = new string[4];
+            int manualStartAPosition = rLab.IndexOf(">a<");
+            int manualStartBPosition = rLab.IndexOf(">b<");
+            int manualStartHPosition = rLab.IndexOf(">h<");
+            int indexOfDigitalInputLightness = rLab.IndexOf("digital_input_lightness");
+            int indexOfDigitalOutputMeasurementColour = rLab.IndexOf("digital_output_measurement_colour");
+            int firstIndexOfDigitalOutputError = rLab.IndexOf("digital_output_error");
+            if (manualStartAPosition > 0 && manualStartBPosition > 0 && manualStartHPosition > 0
+                && indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
+                && firstIndexOfDigitalOutputError > 0)
+            {
+                abValue[0] = rLab.Substring(manualStartAPosition + 3, (manualStartBPosition) - (manualStartAPosition + 3));
+                abValue[1] = rLab.Substring(manualStartBPosition + 3, (manualStartHPosition) - (manualStartBPosition + 3));
+                abValue[2] = rLab.Substring(indexOfDigitalInputLightness + 24,
+                    (indexOfDigitalOutputMeasurementColour - 1) - (indexOfDigitalInputLightness + 24));//DI1
+                abValue[3] = rLab.Substring(indexOfDigitalOutputMeasurementColour + 34,
+                    (firstIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementColour + 34));//DO1
             }
             return abValue;
         }
@@ -253,18 +279,50 @@ namespace ColorWatch
          * Extract sauber condition of manual start and measuring_conductivity
          * 
          * **/
-        public static String[] extractSauberCondition(String responseData)
+        public static List<string> extractSauberCondition(String responseData)
         {
-            String[] continuousResponse = new String[2];
+            List<string> continuousResponse = new List<string>();
             int indexOfDigitalInputLightness = responseData.IndexOf("digital_input_lightness");
-            int indexOfDigitalOutputMeasurementConducitivty = responseData.IndexOf("digital_output_measurement_conductivity");
             int indexOfDigitalOutputMeasurementColour = responseData.IndexOf("digital_output_measurement_colour");
+            int firstIndexOfDigitalOutputError = responseData.IndexOf("digital_output_error");
+            int indexOfDigitalInputConductivity = responseData.IndexOf("digital_input_conductivity");
+            int indexOfDigitalOutputMeasurementConductivity = responseData.IndexOf("digital_output_measurement_conductivity");
             int lastIndexOfDigitalOutputError = responseData.LastIndexOf("digital_output_error");
-            if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementConducitivty > 0
-                && indexOfDigitalOutputMeasurementColour > 0 && lastIndexOfDigitalOutputError > 0)
+            if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
+                && firstIndexOfDigitalOutputError > 0 && indexOfDigitalInputConductivity > 0
+                && indexOfDigitalOutputMeasurementConductivity > 0
+                && lastIndexOfDigitalOutputError > 0
+                && firstIndexOfDigitalOutputError != lastIndexOfDigitalOutputError)//continuous messung 
             {
-                continuousResponse[0] = responseData.Substring(indexOfDigitalInputLightness + 24, (indexOfDigitalOutputMeasurementColour - 1) - (indexOfDigitalInputLightness + 24));
-                continuousResponse[1] = responseData.Substring(indexOfDigitalOutputMeasurementConducitivty + 40, (lastIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementConducitivty + 40));
+                continuousResponse.Add("All");
+                continuousResponse.Add(responseData.Substring(indexOfDigitalInputLightness + 24,
+                    (indexOfDigitalOutputMeasurementColour - 1) - (indexOfDigitalInputLightness + 24)));//DI1
+                continuousResponse.Add(responseData.Substring(indexOfDigitalOutputMeasurementColour + 34,
+                    (firstIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementColour + 34)));//DO1
+                continuousResponse.Add(responseData.Substring(indexOfDigitalInputConductivity + 27,
+                    (indexOfDigitalOutputMeasurementConductivity - 1) - (indexOfDigitalInputConductivity + 27)));//DI2
+                continuousResponse.Add(responseData.Substring(indexOfDigitalOutputMeasurementConductivity + 40,
+                    (lastIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementConductivity + 40)));//DO2
+                return continuousResponse;
+            }
+            else if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
+                && firstIndexOfDigitalOutputError > 0)//manual start
+            {
+                continuousResponse.Add("S");
+                continuousResponse.Add(responseData.Substring(indexOfDigitalInputLightness + 24,
+                    (indexOfDigitalOutputMeasurementColour - 1) - (indexOfDigitalInputLightness + 24)));//DI1
+                continuousResponse.Add(responseData.Substring(indexOfDigitalOutputMeasurementColour + 34,
+                    (firstIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementColour + 34)));//DO1
+                return continuousResponse;
+            }
+            else if (indexOfDigitalInputConductivity > 0 && indexOfDigitalOutputMeasurementConductivity > 0
+              && lastIndexOfDigitalOutputError > 0)//measuring conductivity
+            {
+                continuousResponse.Add("G");
+                continuousResponse.Add(responseData.Substring(indexOfDigitalInputConductivity + 27,
+                    (indexOfDigitalOutputMeasurementConductivity - 1) - (indexOfDigitalInputConductivity + 27)));//DI2
+                continuousResponse.Add(responseData.Substring(indexOfDigitalOutputMeasurementConductivity + 40,
+                    (lastIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementConductivity + 40)));//DO2
                 return continuousResponse;
             }
             else

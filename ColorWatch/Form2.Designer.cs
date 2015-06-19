@@ -55,6 +55,9 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,9 +83,9 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(12, 87);
+            this.button11.Location = new System.Drawing.Point(109, 137);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(91, 32);
+            this.button11.Size = new System.Drawing.Size(88, 69);
             this.button11.TabIndex = 16;
             this.button11.Text = "Manual Stop";
             this.button11.UseVisualStyleBackColor = true;
@@ -91,9 +94,9 @@
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(12, 87);
+            this.button10.Location = new System.Drawing.Point(15, 137);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(91, 32);
+            this.button10.Size = new System.Drawing.Size(91, 27);
             this.button10.TabIndex = 15;
             this.button10.Text = "Manual Start";
             this.button10.UseVisualStyleBackColor = true;
@@ -160,7 +163,7 @@
             // button4
             // 
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(106, 87);
+            this.button4.Location = new System.Drawing.Point(472, 356);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(88, 32);
             this.button4.TabIndex = 23;
@@ -171,7 +174,7 @@
             // button5
             // 
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(12, 125);
+            this.button5.Location = new System.Drawing.Point(469, 356);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(91, 43);
             this.button5.TabIndex = 24;
@@ -182,7 +185,7 @@
             // button6
             // 
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(106, 125);
+            this.button6.Location = new System.Drawing.Point(472, 356);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(88, 43);
             this.button6.TabIndex = 25;
@@ -194,18 +197,18 @@
             // 
             this.button9.BackColor = System.Drawing.SystemColors.Control;
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button9.Location = new System.Drawing.Point(106, 155);
+            this.button9.Location = new System.Drawing.Point(109, 86);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(88, 62);
+            this.button9.Size = new System.Drawing.Size(88, 45);
             this.button9.TabIndex = 28;
             this.button9.Text = "Data Output Low";
             this.button9.UseVisualStyleBackColor = false;
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(12, 155);
+            this.button12.Location = new System.Drawing.Point(15, 86);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(91, 62);
+            this.button12.Size = new System.Drawing.Size(91, 45);
             this.button12.TabIndex = 27;
             this.button12.Text = "Data Out Write";
             this.button12.UseVisualStyleBackColor = true;
@@ -221,8 +224,6 @@
             chartArea1.AxisX2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             chartArea1.AxisX2.TitleForeColor = System.Drawing.Color.Navy;
             chartArea1.AxisY2.Interval = 20D;
-            chartArea1.AxisY2.Maximum = 20D;
-            chartArea1.AxisY2.Minimum = -60D;
             chartArea1.AxisY2.TextOrientation = System.Windows.Forms.DataVisualization.Charting.TextOrientation.Horizontal;
             chartArea1.AxisY2.Title = "b";
             chartArea1.AxisY2.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -276,9 +277,9 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(9, 229);
+            this.button14.Location = new System.Drawing.Point(15, 292);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(91, 67);
+            this.button14.Size = new System.Drawing.Size(88, 34);
             this.button14.TabIndex = 31;
             this.button14.Text = "RESET";
             this.button14.UseVisualStyleBackColor = true;
@@ -292,38 +293,72 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(12, 346);
+            this.richTextBox1.Location = new System.Drawing.Point(12, 344);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(454, 187);
+            this.richTextBox1.Size = new System.Drawing.Size(454, 189);
             this.richTextBox1.TabIndex = 32;
             this.richTextBox1.Text = "";
             // 
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(12, 87);
+            this.label3.Location = new System.Drawing.Point(15, 209);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(88, 55);
+            this.label3.Size = new System.Drawing.Size(88, 38);
             this.label3.TabIndex = 33;
-            this.label3.Text = "Leitung Sauber";
+            this.label3.Text = "DI1";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(106, 87);
+            this.label4.Location = new System.Drawing.Point(109, 209);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(88, 55);
+            this.label4.Size = new System.Drawing.Size(88, 38);
             this.label4.TabIndex = 34;
-            this.label4.Text = "Wasser Sauber";
+            this.label4.Text = "D01";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label5.Location = new System.Drawing.Point(15, 251);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(88, 38);
+            this.label5.TabIndex = 35;
+            this.label5.Text = "DI2";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label6
+            // 
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label6.Location = new System.Drawing.Point(109, 251);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(88, 38);
+            this.label6.TabIndex = 36;
+            this.label6.Text = "D02";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(15, 170);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(91, 36);
+            this.button15.TabIndex = 37;
+            this.button15.Text = "Conductivity Start";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Visible = false;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 556);
+            this.Controls.Add(this.button15);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.richTextBox1);
@@ -380,5 +415,8 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button15;
     }
 }
