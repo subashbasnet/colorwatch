@@ -31,10 +31,13 @@ namespace ColorWatch
             int calFactorYPosition = lData.IndexOf("Calibrationfactor_y");
             int calFactorZPosition = lData.IndexOf("Calibrationfactor_z");
             //substring is different to that of java, second parameter is not end of string, but the length of the string
-            calibrationFactor[0] = lData.Substring(calFactorXPosition + 20, (calFactorYPosition - 1) - (calFactorXPosition + 20));
-            calibrationFactor[1] = lData.Substring(calFactorYPosition + 20, (calFactorZPosition - 1) - (calFactorYPosition + 20));
-            lData = lData.Substring(calFactorZPosition + 20);
-            calibrationFactor[2] = lData.Substring(0, lData.IndexOf(">"));
+            if (calFactorXPosition > -1 && calFactorYPosition > -1 && calFactorZPosition > -1)
+            {
+                calibrationFactor[0] = lData.Substring(calFactorXPosition + 20, (calFactorYPosition - 1) - (calFactorXPosition + 20));
+                calibrationFactor[1] = lData.Substring(calFactorYPosition + 20, (calFactorZPosition - 1) - (calFactorYPosition + 20));
+                lData = lData.Substring(calFactorZPosition + 20);
+                calibrationFactor[2] = lData.Substring(0, lData.IndexOf(">"));
+            }
             return calibrationFactor;
         }
 
@@ -53,10 +56,14 @@ namespace ColorWatch
             //substring is different to that of java,first parameter position of required char/string, 
             //second parameter is not end of string, but the length of the string 
             //i.e. the length of the output string i.e. length of our final result string
-            calibrationNumerics[0] = lData.Substring(calFactorXPosition + 20, (calFactorYPosition - 1) - (calFactorXPosition + 20));
-            calibrationNumerics[1] = lData.Substring(calFactorYPosition + 20, (calFactorZPosition - 1) - (calFactorYPosition + 20));
-            lData = lData.Substring(calFactorZPosition + 20);
-            calibrationNumerics[2] = lData.Substring(0, lData.IndexOf(">"));
+            if (calFactorXPosition > -1 && calFactorYPosition > -1 && calFactorZPosition > -1)
+            {
+                calibrationNumerics[0] = lData.Substring(calFactorXPosition + 20, (calFactorYPosition - 1) - (calFactorXPosition + 20));
+                calibrationNumerics[1] = lData.Substring(calFactorYPosition + 20, (calFactorZPosition - 1) - (calFactorYPosition + 20));
+                lData = lData.Substring(calFactorZPosition + 20);
+                calibrationNumerics[2] = lData.Substring(0, lData.IndexOf(">"));
+            }
+
             return calibrationNumerics;
         }
 
@@ -101,34 +108,44 @@ namespace ColorWatch
             //substring is different to that of java,first parameter position of required char/string, 
             //second parameter is not end of string, but the length of the string 
             //i.e. the length of the output string i.e. length of our final result string
-            if (outPutTest.Substring(digitalOutputMeasurementOnePosition + 31, 1).Equals("0"))
+            if (digitalOutputMeasurementOnePosition > -1)
             {
-                outPutTestCondition[0] = false;
+                if (outPutTest.Substring(digitalOutputMeasurementOnePosition + 31, 1).Equals("0"))
+                {
+                    outPutTestCondition[0] = false;
+                }
+                else
+                {
+                    outPutTestCondition[0] = true;
+                }
             }
-            else
+            if (digitalOutputMeasurementTwoPosition > -1)
             {
-                outPutTestCondition[0] = true;
+                if (outPutTest.Substring(digitalOutputMeasurementTwoPosition + 31, 1).Equals("0"))
+                {
+                    outPutTestCondition[1] = false;
+                }
+                else
+                {
+                    outPutTestCondition[1] = true;
+                }
             }
-            if (outPutTest.Substring(digitalOutputMeasurementTwoPosition + 31, 1).Equals("0"))
+            if (digitalOutputErrorPosition > -1)
             {
-                outPutTestCondition[1] = false;
-            }
-            else
-            {
-                outPutTestCondition[1] = true;
-            }
-            if (outPutTest.Substring(digitalOutputErrorPosition + 21, 1).Equals("0"))
-            {
-                outPutTestCondition[2] = false;
-            }
-            else
-            {
-                outPutTestCondition[2] = true;
+                if (outPutTest.Substring(digitalOutputErrorPosition + 21, 1).Equals("0"))
+                {
+                    outPutTestCondition[2] = false;
+                }
+                else
+                {
+                    outPutTestCondition[2] = true;
+                }
             }
             return outPutTestCondition;
         }
 
         /**
+        * Looks like this method is not used anywhere
         * @return string array
         *Wir haben o/p from Manual Start-->’S’ .
         *We look into ‘digital_output_measurement_one<X>’-->D01 and 
@@ -227,8 +244,12 @@ namespace ColorWatch
         {
             int manualStartHPosition = manualStartResponseData.IndexOf("h<");
             int manualStartrawLPosition = manualStartResponseData.IndexOf("rawL<");
-            double hValue = double.Parse(manualStartResponseData.Substring(manualStartHPosition + 2,
+            double hValue = 0;
+            if (manualStartHPosition > -1 && manualStartrawLPosition > -1)
+            {
+                hValue = double.Parse(manualStartResponseData.Substring(manualStartHPosition + 2,
                 (manualStartrawLPosition - 2) - (manualStartHPosition + 2)));
+            }
             return hValue;
         }
 
@@ -245,10 +266,13 @@ namespace ColorWatch
             int borderGreen = listenReponse.IndexOf("Border_Green");
             int borderYellow = listenReponse.IndexOf("Border_Yellow");
             int borderClear = listenReponse.IndexOf("Border_Clear");
-            hValues[0] = double.Parse(listenReponse.Substring(borderPink + 12, (borderGreen - 1) - (borderPink + 12)));
-            hValues[1] = double.Parse(listenReponse.Substring(borderGreen + 13, (borderYellow - 1) - (borderGreen + 13)));
-            hValues[2] = double.Parse(listenReponse.Substring(borderYellow + 14, (borderClear - 1) - (borderYellow + 14)));
-            hValues[3] = double.Parse(listenReponse.Substring(borderClear + 13, listenReponse.LastIndexOf(">") - (borderClear + 13)));
+            if (borderPink > -1 && borderGreen > -1 && borderYellow > -1 && borderClear > -1)
+            {
+                hValues[0] = double.Parse(listenReponse.Substring(borderPink + 12, (borderGreen - 1) - (borderPink + 12)));
+                hValues[1] = double.Parse(listenReponse.Substring(borderGreen + 13, (borderYellow - 1) - (borderGreen + 13)));
+                hValues[2] = double.Parse(listenReponse.Substring(borderYellow + 14, (borderClear - 1) - (borderYellow + 14)));
+                hValues[3] = double.Parse(listenReponse.Substring(borderClear + 13, listenReponse.LastIndexOf(">") - (borderClear + 13)));
+            }
             return hValues;
         }
 
@@ -266,12 +290,16 @@ namespace ColorWatch
             int indexOfPwmCycle = listenReponse.IndexOf("pwm_cycle");
             int indexOfConductivityAbweichung = listenReponse.IndexOf("conductivity_abweichung");
             int indexOfConductivityDataAverage = listenReponse.IndexOf("conductivity_data_average");
-            timerValues[0] = double.Parse(listenReponse.Substring(indexOfReferenceTimer + 15, (indexOfProbeTimer - 1) - (indexOfReferenceTimer + 15)));
-            timerValues[1] = double.Parse(listenReponse.Substring(indexOfProbeTimer + 11, (indexOfConductTimer - 1) - (indexOfProbeTimer + 11)));
-            timerValues[2] = double.Parse(listenReponse.Substring(indexOfConductTimer + 13, (indexOfPwmCycle - 1) - (indexOfConductTimer + 13)));
-            timerValues[3] = double.Parse(listenReponse.Substring(indexOfPwmCycle + 10, (indexOfConductivityAbweichung - 1) - (indexOfPwmCycle + 10)));
-            timerValues[4] = double.Parse(listenReponse.Substring(indexOfConductivityAbweichung + 24, (indexOfConductivityDataAverage - 1) - (indexOfConductivityAbweichung + 24)));
-            timerValues[5] = double.Parse(listenReponse.Substring(indexOfConductivityDataAverage + 26, listenReponse.LastIndexOf(">") - (indexOfConductivityDataAverage + 26)));
+            if (indexOfReferenceTimer > -1 && indexOfProbeTimer > -1 && indexOfConductTimer > -1 &&
+                indexOfPwmCycle > -1 && indexOfConductivityAbweichung > -1 && indexOfConductivityDataAverage > -1)
+            {
+                timerValues[0] = double.Parse(listenReponse.Substring(indexOfReferenceTimer + 15, (indexOfProbeTimer - 1) - (indexOfReferenceTimer + 15)));
+                timerValues[1] = double.Parse(listenReponse.Substring(indexOfProbeTimer + 11, (indexOfConductTimer - 1) - (indexOfProbeTimer + 11)));
+                timerValues[2] = double.Parse(listenReponse.Substring(indexOfConductTimer + 13, (indexOfPwmCycle - 1) - (indexOfConductTimer + 13)));
+                timerValues[3] = double.Parse(listenReponse.Substring(indexOfPwmCycle + 10, (indexOfConductivityAbweichung - 1) - (indexOfPwmCycle + 10)));
+                timerValues[4] = double.Parse(listenReponse.Substring(indexOfConductivityAbweichung + 24, (indexOfConductivityDataAverage - 1) - (indexOfConductivityAbweichung + 24)));
+                timerValues[5] = double.Parse(listenReponse.Substring(indexOfConductivityDataAverage + 26, listenReponse.LastIndexOf(">") - (indexOfConductivityDataAverage + 26)));
+            }
             return timerValues;
         }
 

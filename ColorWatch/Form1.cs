@@ -12,6 +12,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/**
+ *Never Continuous Messung as said 
+ **/
 namespace ColorWatch
 {
     public partial class Form1 : Form
@@ -95,6 +98,9 @@ namespace ColorWatch
                     }
                 }
             }
+            else {//to kill the background process
+                System.Windows.Forms.MessageBox.Show("Please Press 'Stop' before Disconnect");
+            }
         }
 
         /*
@@ -119,7 +125,8 @@ namespace ColorWatch
                 Thread.Sleep(20);//find out correct time for the response capture
                 //System.Windows.Forms.MessageBox.Show(connectPort.ReadExisting());
                 String wResponse = connectPort.ReadExisting();
-                richTextBox1.AppendText(wResponse); 
+                richTextBox1.AppendText(wResponse);
+                richTextBox1.ScrollToCaret();
                 if (wResponse != null)
                 {
                     if (wResponse.Length > 0)
@@ -159,7 +166,7 @@ namespace ColorWatch
 
         /*
          * Send 'L' to micro-controller and write response
-         * to rich text
+         * to rich text, LED Test
          */
         private void button4_Click(object sender, EventArgs e)
         {//8 second for response it takes
@@ -174,7 +181,7 @@ namespace ColorWatch
 
         /*
          * Send 'K' to micro-controller and write response
-         * to rich text and change button color
+         * to rich text and change button color, Unfiltered Mode
          */
         private void button26_Click(object sender, EventArgs e)
         {
@@ -183,7 +190,8 @@ namespace ColorWatch
                 connectPort.Write("K");
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
-                richTextBox1.Text = digitalOuptResponse;
+                richTextBox1.AppendText(digitalOuptResponse);
+                richTextBox1.ScrollToCaret();
                 if (digitalOuptResponse.Equals("unfiltered_mode<1>"))
                 {
                     button26.BackColor = Color.Green;
@@ -197,7 +205,7 @@ namespace ColorWatch
 
         /*
          * Send 'R' to micro-controller and write response
-         * to rich text and change button color
+         * to rich text and change button color, Raw Data Output
          */
         private void button27_Click(object sender, EventArgs e)
         {
@@ -206,7 +214,8 @@ namespace ColorWatch
                 connectPort.Write("R");
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
-                richTextBox1.Text = digitalOuptResponse;
+                richTextBox1.AppendText(digitalOuptResponse);
+                richTextBox1.ScrollToCaret();
                 if (digitalOuptResponse.Equals("Raw_Data_Output<1>"))
                 {
                     button27.BackColor = Color.Green;
@@ -222,6 +231,7 @@ namespace ColorWatch
         /*
          * Send 'E<1> or E<2>' to micro-controller and write response
          * to rich text and change button color
+         * Digital Output
          */
         private void button25_Click(object sender, EventArgs e)
         {
@@ -229,8 +239,8 @@ namespace ColorWatch
             {
                 connectPort.Write("E" + domainUpDown1.Text);
                 Thread.Sleep(20);
-                string digitalOuptResponse = connectPort.ReadExisting();
-                richTextBox1.Text = digitalOuptResponse;
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
                 //if (digitalOuptResponse.Equals("0"))
                 //{
                 //    button25.BackColor = Color.Green;
@@ -245,6 +255,7 @@ namespace ColorWatch
         /*
          * Send 'TR' to micro-controller and write response
          * to rich text
+         * Referencetimer
          */
         private void button5_Click(object sender, EventArgs e)
         {
@@ -252,13 +263,15 @@ namespace ColorWatch
             {
                 connectPort.Write("TR<" + trNumberInputBox.Text.Trim() + ">");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
         /*
          * Send 'TP' to micro-controller and write response
          * to rich text
+         * Probetimer
          */
         private void button22_Click(object sender, EventArgs e)
         {
@@ -266,13 +279,15 @@ namespace ColorWatch
             {
                 connectPort.Write("TP<" + textBox12.Text.Trim() + ">");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
         /*
          * Send 'TC' to micro-controller and write response
          * to rich text
+         * Conductivitytimer
          */
         private void button24_Click(object sender, EventArgs e)
         {
@@ -280,13 +295,15 @@ namespace ColorWatch
             {
                 connectPort.Write("TC<" + textBox14.Text.Trim() + ">");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
         /*
          * Send 'TW' to micro-controller and write response
          * to rich text
+         * PWM_cycle
          */
         private void button23_Click(object sender, EventArgs e)
         {
@@ -294,7 +311,8 @@ namespace ColorWatch
             {
                 connectPort.Write("TW<" + textBox13.Text.Trim() + ">");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
@@ -447,7 +465,8 @@ namespace ColorWatch
                     Thread.Sleep(20);
                 }
                 calibrationData = connectPort.ReadExisting();
-                richTextBox1.Text = calibrationData;
+                richTextBox1.AppendText(calibrationData);
+                richTextBox1.ScrollToCaret();
                 if (calibrationData != null)
                 {
                     if (calibrationData.Length > 0)
@@ -479,7 +498,8 @@ namespace ColorWatch
                         }
                     }
                 }
-                richTextBox1.Text = calibrationData;
+                richTextBox1.AppendText(calibrationData);
+                richTextBox1.ScrollToCaret();
                 dontCalibrate = false;
             }
         }
@@ -523,7 +543,8 @@ namespace ColorWatch
                             textBox3.Text = calibrationDataArray[2];
                         }
                     }
-                    richTextBox1.Text = calibrationData;
+                    richTextBox1.AppendText(calibrationData);
+                    richTextBox1.ScrollToCaret();
                     dontCalibrate = true;
                 }
             }
@@ -573,7 +594,8 @@ namespace ColorWatch
                         }
                     }
                 }
-                richTextBox1.Text = outPutTest;
+                richTextBox1.AppendText(outPutTest);
+                richTextBox1.ScrollToCaret();
             }
         }
 
@@ -581,8 +603,8 @@ namespace ColorWatch
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 1000; i++)
-            {
+            int i = 0;
+            while (true){
                 if (worker.CancellationPending == true)
                 {
                     e.Cancel = true;
@@ -594,6 +616,7 @@ namespace ColorWatch
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
                 }
+                i++;
             }
         }
 
@@ -650,7 +673,7 @@ namespace ColorWatch
                             chart1.Series[0].Color = Color.Pink;
                             onLoad = false;
                         }
-                        richTextBox1.Text = manualStartResponse;
+                        //richTextBox1. = manualStartResponse;
                         hValue = BaseFunctions.hValue(manualStartResponse);
                         firstEntryForHValue = true;
                         if (backgroundWorker2.IsBusy != true)
@@ -701,7 +724,10 @@ namespace ColorWatch
         {
             backgroundWorker4.CancelAsync();
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 1000; i++)
+            //for (int i = 1; i <= 1000; i++)
+            //{
+            int i = 0;
+            while (true)
             {
                 if (worker.CancellationPending == true)
                 {
@@ -714,7 +740,9 @@ namespace ColorWatch
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
                 }
+                i++;
             }
+            //}
         }
 
         //This event handler updates the progress
@@ -742,7 +770,8 @@ namespace ColorWatch
                     if (manualStartResponseData.Length > 0)
                     {
                         testForGraph += 1;
-                        richTextBox1.Text = manualStartResponseData;
+                        richTextBox1.AppendText(manualStartResponseData);
+                        richTextBox1.ScrollToCaret();
                         //chart1.Series[4].Points.AddXY(testForGraph, BaseFunctions.hValue(manualStartResponseData));
                         chart1.Series[4].Points.AddY(BaseFunctions.hValue(manualStartResponseData));
                         //richTextBox1.Text = "Xmax----->" + chart1.ChartAreas[0].AxisX.Maximum.ToString();
@@ -785,6 +814,7 @@ namespace ColorWatch
         /**
          * send 'MP<XX>' where ‘XX’ is the number entered to microcontroller and 
          *  now change the greyed text box with this value and the other text box empty as before.
+         *  Borders Write
          * **/
         private void button17_Click(object sender, EventArgs e)
         {
@@ -893,8 +923,8 @@ namespace ColorWatch
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 50; i++)
-            {
+            int i = 0;
+            while(true){
                 if (worker.CancellationPending == true)
                 {
                     e.Cancel = true;
@@ -906,6 +936,7 @@ namespace ColorWatch
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
                 }
+                i++;  
             }
         }
 
@@ -919,7 +950,8 @@ namespace ColorWatch
             {
                 if (ledResponseData.Length > 0)
                 {
-                    richTextBox1.Text = ledResponseData;
+                    richTextBox1.AppendText(ledResponseData);
+                    richTextBox1.ScrollToCaret();
                     backgroundWorker3.CancelAsync();
                 }
             }
@@ -949,8 +981,8 @@ namespace ColorWatch
         private void backgroundWorker4_DoWork(object sender, DoWorkEventArgs e)
         {
             System.ComponentModel.BackgroundWorker worker = sender as System.ComponentModel.BackgroundWorker;
-            for (int i = 1; i <= 1000; i++)
-            {
+            int i = 0;
+            while(true){
                 if (worker.CancellationPending == true)
                 {
                     e.Cancel = true;
@@ -962,6 +994,7 @@ namespace ColorWatch
                     System.Threading.Thread.Sleep(500);
                     worker.ReportProgress(i * 10);
                 }
+                i++;
             }
         }
 
@@ -978,6 +1011,7 @@ namespace ColorWatch
         /*
         * Send 'A' i.e. self-test to micro-controller and write response
         * to rich text and change button color
+         * Self Test
         */
         private void button30_Click(object sender, EventArgs e)
         {
@@ -986,7 +1020,8 @@ namespace ColorWatch
                 connectPort.Write("A");
                 Thread.Sleep(20);
                 string digitalOuptResponse = connectPort.ReadExisting();
-                richTextBox1.Text = digitalOuptResponse;
+                richTextBox1.AppendText(digitalOuptResponse);
+                richTextBox1.ScrollToCaret();
                 if (digitalOuptResponse.Equals("Pass"))
                 {
                     button27.BackColor = Color.Green;
@@ -1005,6 +1040,7 @@ namespace ColorWatch
         /*
         * Send 'G' i.e. measuring conductivity to micro-controller and write response
         * to rich text and change button color
+         * Measuring conductivity
         */
         private void button28_Click(object sender, EventArgs e)
         {
@@ -1012,13 +1048,15 @@ namespace ColorWatch
             {
                 connectPort.Write("G");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
         /*
         * Send 'P' i.e. calibration conductivity to micro-controller and write response
         * to rich text and change button color
+         * Calibration conductivity
         */
         private void button29_Click(object sender, EventArgs e)
         {
@@ -1026,7 +1064,8 @@ namespace ColorWatch
             {
                 connectPort.Write("P");
                 Thread.Sleep(20);
-                richTextBox1.Text = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
     }

@@ -59,6 +59,11 @@ namespace ColorWatch
                             button3.BackColor = Color.Green;
                             label2.Text = "";
                             String display = connectPort.ReadExisting();//for continuous messung, there is default response
+                            if (display == null || display.Length <= 0)
+                            {
+                                Thread.Sleep(300);
+                                display = connectPort.ReadExisting();
+                            }
                             if (display != null)
                             {
                                 if (display.Length > 0)
@@ -150,7 +155,8 @@ namespace ColorWatch
             {
                 connectPort.Write("I");
                 Thread.Sleep(20);
-                String calibrationData = connectPort.ReadExisting();
+                richTextBox1.AppendText(connectPort.ReadExisting());
+                richTextBox1.ScrollToCaret();
             }
         }
 
@@ -298,6 +304,7 @@ namespace ColorWatch
         /**
          * Plot's graph and if manual start then 
          * changes color DI1 and DO1 green/red
+         * if Manual start do everything, otherwise only plot the graph
          * **/
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -309,11 +316,14 @@ namespace ColorWatch
                     if (manualStart)
                     {
                         rLabData = BaseFunctions.RLabManualStart(manualStartResponseData);
+                        richTextBox1.AppendText(manualStartResponseData);
+                        richTextBox1.ScrollToCaret();
                     }
                     else
                     {// for continuous messung only graph 
                         rLabData = BaseFunctions.RLabForGraphOnly(manualStartResponseData);
                     }
+                    //data to plot graph
                     double n0;
                     bool isNumeric0 = double.TryParse(rLabData[0], out n0);
                     double n1;
@@ -400,8 +410,7 @@ namespace ColorWatch
                             }
                         }
                     }
-                    richTextBox1.AppendText(manualStartResponseData);
-                    richTextBox1.ScrollToCaret();
+                    
                 }
             }
             //}
