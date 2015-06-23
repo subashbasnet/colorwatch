@@ -1,6 +1,7 @@
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\bin\Debug\ColorWatch.exe.config
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\bin\Debug\ColorWatch.exe
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\bin\Debug\ColorWatch.pdb
+C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.csprojResolveAssemblyReference.cache
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.Form1.resources
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.Form2.resources
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.Form3.resources
@@ -8,4 +9,3 @@ C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.csproj.GenerateResource.Cache
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.exe
 C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.pdb
-C:\Users\subash\Documents\Visual Studio 2013\Projects\ColorWatch\ColorWatch\obj\Debug\ColorWatch.csprojResolveAssemblyReference.cache

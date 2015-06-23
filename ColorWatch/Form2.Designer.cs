@@ -89,7 +89,6 @@
             this.button11.TabIndex = 16;
             this.button11.Text = "Manual Stop";
             this.button11.UseVisualStyleBackColor = true;
-            this.button11.Visible = false;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // button10
@@ -100,7 +99,6 @@
             this.button10.TabIndex = 15;
             this.button10.Text = "Manual Start";
             this.button10.UseVisualStyleBackColor = true;
-            this.button10.Visible = false;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button8
@@ -348,7 +346,6 @@
             this.button15.TabIndex = 37;
             this.button15.Text = "Conductivity Start";
             this.button15.UseVisualStyleBackColor = true;
-            this.button15.Visible = false;
             this.button15.Click += new System.EventHandler(this.button15_Click);
             // 
             // Form2

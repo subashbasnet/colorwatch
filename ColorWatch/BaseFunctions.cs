@@ -67,10 +67,10 @@ namespace ColorWatch
         public static String dataOutWrite(String dataOutputResponse)
         {
             int dataOutResponseIndex = dataOutputResponse.IndexOf("Data_Output<");
-            if (dataOutResponseIndex > 0)
+            if (dataOutResponseIndex > -1)
             {
                 if (dataOutputResponse.Substring(dataOutResponseIndex + 12,
-                1).Equals("0"))
+                1).Equals("1"))
                 {
                     return "true";
                 }
@@ -186,7 +186,7 @@ namespace ColorWatch
             int manualStartAPosition = rLab.IndexOf(">a<");
             int manualStartBPosition = rLab.IndexOf(">b<");
             int manualStartHPosition = rLab.IndexOf(">h<");
-            if (manualStartAPosition > 0 && manualStartBPosition > 0 && manualStartHPosition > 0)
+            if (manualStartAPosition > -1 && manualStartBPosition > -1 && manualStartHPosition > -1)
             {
                 abValue[0] = rLab.Substring(manualStartAPosition + 3, (manualStartBPosition) - (manualStartAPosition + 3));
                 abValue[1] = rLab.Substring(manualStartBPosition + 3, (manualStartHPosition) - (manualStartBPosition + 3));
@@ -206,9 +206,9 @@ namespace ColorWatch
             int indexOfDigitalInputLightness = rLab.IndexOf("digital_input_lightness");
             int indexOfDigitalOutputMeasurementColour = rLab.IndexOf("digital_output_measurement_colour");
             int firstIndexOfDigitalOutputError = rLab.IndexOf("digital_output_error");
-            if (manualStartAPosition > 0 && manualStartBPosition > 0 && manualStartHPosition > 0
-                && indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
-                && firstIndexOfDigitalOutputError > 0)
+            if (manualStartAPosition > -1 && manualStartBPosition > -1 && manualStartHPosition > -1
+                && indexOfDigitalInputLightness > -1 && indexOfDigitalOutputMeasurementColour > -1
+                && firstIndexOfDigitalOutputError > -1)
             {
                 abValue[0] = rLab.Substring(manualStartAPosition + 3, (manualStartBPosition) - (manualStartAPosition + 3));
                 abValue[1] = rLab.Substring(manualStartBPosition + 3, (manualStartHPosition) - (manualStartBPosition + 3));
@@ -288,10 +288,10 @@ namespace ColorWatch
             int indexOfDigitalInputConductivity = responseData.IndexOf("digital_input_conductivity");
             int indexOfDigitalOutputMeasurementConductivity = responseData.IndexOf("digital_output_measurement_conductivity");
             int lastIndexOfDigitalOutputError = responseData.LastIndexOf("digital_output_error");
-            if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
-                && firstIndexOfDigitalOutputError > 0 && indexOfDigitalInputConductivity > 0
-                && indexOfDigitalOutputMeasurementConductivity > 0
-                && lastIndexOfDigitalOutputError > 0
+            if (indexOfDigitalInputLightness > -1 && indexOfDigitalOutputMeasurementColour > -1
+                && firstIndexOfDigitalOutputError > -1 && indexOfDigitalInputConductivity > -1
+                && indexOfDigitalOutputMeasurementConductivity > -1
+                && lastIndexOfDigitalOutputError > -1
                 && firstIndexOfDigitalOutputError != lastIndexOfDigitalOutputError)//continuous messung 
             {
                 continuousResponse.Add("All");
@@ -305,8 +305,8 @@ namespace ColorWatch
                     (lastIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementConductivity + 40)));//DO2
                 return continuousResponse;
             }
-            else if (indexOfDigitalInputLightness > 0 && indexOfDigitalOutputMeasurementColour > 0
-                && firstIndexOfDigitalOutputError > 0)//manual start
+            else if (indexOfDigitalInputLightness > -1 && indexOfDigitalOutputMeasurementColour > -1
+                && firstIndexOfDigitalOutputError > -1)//manual start
             {
                 continuousResponse.Add("S");
                 continuousResponse.Add(responseData.Substring(indexOfDigitalInputLightness + 24,
@@ -315,8 +315,8 @@ namespace ColorWatch
                     (firstIndexOfDigitalOutputError - 1) - (indexOfDigitalOutputMeasurementColour + 34)));//DO1
                 return continuousResponse;
             }
-            else if (indexOfDigitalInputConductivity > 0 && indexOfDigitalOutputMeasurementConductivity > 0
-              && lastIndexOfDigitalOutputError > 0)//measuring conductivity
+            else if (indexOfDigitalInputConductivity > -1 && indexOfDigitalOutputMeasurementConductivity > -1
+              && lastIndexOfDigitalOutputError > -1)//measuring conductivity
             {
                 continuousResponse.Add("G");
                 continuousResponse.Add(responseData.Substring(indexOfDigitalInputConductivity + 27,

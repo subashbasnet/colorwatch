@@ -58,12 +58,12 @@ namespace ColorWatch
                             button3.Text = "Disconnect";
                             button3.BackColor = Color.Green;
                             label2.Text = "";
-                            String display = connectPort.ReadExisting();
-                            manualStart = false; //as this one is continuous messung
+                            String display = connectPort.ReadExisting();//for continuous messung, there is default response
                             if (display != null)
                             {
                                 if (display.Length > 0)
                                 {
+                                    manualStart = false; //as this one is continuous messung
                                     if (backgroundWorker2.IsBusy != true)
                                     {
                                         //Start the asynchronous operation.
@@ -210,8 +210,8 @@ namespace ColorWatch
         {
             if (button3.Text.Equals("Disconnect"))
             {
-                //connectPort.Write("S");
-                //Thread.Sleep(2000);
+                connectPort.Write("S");
+                Thread.Sleep(2000);
                 String display = connectPort.ReadExisting();
                 if (display != null)
                 {
@@ -236,8 +236,10 @@ namespace ColorWatch
                             //Start the asynchronous operation.
                             backgroundWorker1.RunWorkerAsync();
                         }
-                        else {
+                        else
+                        {
                             System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
+                            connectPort.Write("B");//to end the continuous manual start response
                         }
                     }
                 }
@@ -251,67 +253,13 @@ namespace ColorWatch
                     else
                     {
                         System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
+                        connectPort.Write("B");//to end the continuous manual start response
                     }
                 }
             }
         }
 
-        /**
-          * Manual Stop Button
-          * Send 'B' 
-          * **/
-        private void button11_Click(object sender, EventArgs e)
-        {
-            if (button3.Text.Equals("Disconnect"))
-            {
-                connectPort.Write("B");
-                //Cancel the asynchronous operation.
-                backgroundWorker1.CancelAsync();
-            }
-        }
-
-        /*
-        * Send 'W' to micro-controller and write response
-        * to rich text,
-        * Set the 'Data Output Low' button to Active-->Green color 
-        * or Inactive-->Red color
-        */
-        private void button12_Click(object sender, EventArgs e)
-        {
-            if (button3.Text.Equals("Disconnect"))
-            {
-                connectPort.Write("W");
-                Thread.Sleep(5);//find out correct time for the response capture
-                //System.Windows.Forms.MessageBox.Show(connectPort.ReadExisting());
-                String wResponse = connectPort.ReadExisting();
-                if (wResponse != null)
-                {
-                    if (wResponse.Length > 0)
-                    {
-                        wResponse = BaseFunctions.dataOutWrite(wResponse);
-                        if (wResponse.Equals("true"))
-                        {
-                            button9.BackColor = Color.Green;
-                            button9.Text = "Data Output active";
-                        }
-                        else if (wResponse.Equals("false"))
-                        {
-                            button9.BackColor = Color.Red;
-                            button9.Text = "Data Output inactive";
-                        }
-                        else
-                        {
-                            button9.BackColor = default(Color);
-                            button9.Text = "Unknown";
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        //This event handler is where the time-consuming work ist done.
+        //This event handler is where the time-consuming work is done.
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             if (onLoad)
@@ -370,10 +318,10 @@ namespace ColorWatch
                     bool isNumeric0 = double.TryParse(rLabData[0], out n0);
                     double n1;
                     bool isNumeric1 = double.TryParse(rLabData[1], out n1);
-                    double n2=0;
-                    bool isNumeric2=false;
-                    double n3=0;
-                    bool isNumeric3=false;
+                    double n2 = 0;
+                    bool isNumeric2 = false;
+                    double n3 = 0;
+                    bool isNumeric3 = false;
                     if (manualStart)
                     {
                         isNumeric2 = double.TryParse(rLabData[2], out n2);
@@ -390,11 +338,11 @@ namespace ColorWatch
                         {
                             if (isNumeric2 && isNumeric3)
                             {
-                                if (n2==0)
+                                if (n2 == 0)
                                     label3.BackColor = Color.Green;
                                 else
                                     label3.BackColor = Color.Red;//1
-                                if (n3==0)
+                                if (n3 == 0)
                                     label4.BackColor = Color.Green;
                                 else
                                     label4.BackColor = Color.Red;//1
@@ -435,7 +383,8 @@ namespace ColorWatch
                             // no, so we add to the end
                             else chart1.Series[0].Points.AddXY(n0, n1);
                         }
-                        if(manualStart){
+                        if (manualStart)
+                        {
                             isNumeric2 = double.TryParse(rLabData[2], out n2);
                             isNumeric3 = double.TryParse(rLabData[3], out n3);
                             if (isNumeric2 && isNumeric3)
@@ -451,6 +400,8 @@ namespace ColorWatch
                             }
                         }
                     }
+                    richTextBox1.AppendText(manualStartResponseData);
+                    richTextBox1.ScrollToCaret();
                 }
             }
             //}
@@ -459,6 +410,59 @@ namespace ColorWatch
         //This event handler deals with the results of the background operation.
         private void backgroundWorker1_RunWorkerCompleted_1(object sender, RunWorkerCompletedEventArgs e)
         {
+        }
+
+        /**
+          * Manual Stop Button
+          * Send 'B' 
+          * **/
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("B");
+                //Cancel the asynchronous operation.
+                backgroundWorker1.CancelAsync();
+            }
+        }
+
+        /*
+        * Send 'W' to micro-controller and write response
+        * to rich text,
+        * Set the 'Data Output Low' button to Active-->Green color 
+        * or Inactive-->Red color
+        */
+        private void button12_Click(object sender, EventArgs e)
+        {
+            if (button3.Text.Equals("Disconnect"))
+            {
+                connectPort.Write("W");
+                Thread.Sleep(5);//find out correct time for the response capture
+                //System.Windows.Forms.MessageBox.Show(connectPort.ReadExisting());
+                String wResponse = connectPort.ReadExisting();
+                if (wResponse != null)
+                {
+                    if (wResponse.Length > 0)
+                    {
+                        wResponse = BaseFunctions.dataOutWrite(wResponse);
+                        if (wResponse.Equals("true"))
+                        {
+                            button9.BackColor = Color.Green;
+                            button9.Text = "Data Output active";
+                        }
+                        else if (wResponse.Equals("false"))
+                        {
+                            button9.BackColor = Color.Red;
+                            button9.Text = "Data Output inactive";
+                        }
+                        else
+                        {
+                            button9.BackColor = default(Color);
+                            button9.Text = "Unknown";
+                        }
+                    }
+                }
+            }
         }
 
         /**
@@ -504,6 +508,10 @@ namespace ColorWatch
                 richTextBox1.Clear();
                 chart1.Series[0].Points.Clear();
                 Form2_Load(sender, e);
+                label3.BackColor = default(Color);
+                label4.BackColor = default(Color);
+                label5.BackColor = default(Color);
+                label6.BackColor = default(Color);
                 //connectPort.Close();
                 //button3.Text = "Connect";
                 //button3.BackColor = default(Color);
@@ -574,7 +582,7 @@ namespace ColorWatch
                 else
                 {
                     //Perform a time consuming operation and report progress
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(100);
                     worker.ReportProgress(i * 10);
                 }
                 // }
@@ -599,44 +607,20 @@ namespace ColorWatch
                     {
                         if (extractedSauberData[0].Equals("All"))//continuous messung
                         {
-                            if (extractedSauberData[1].Equals("0"))
-                                label3.BackColor = Color.Green;
-                            else
-                                label3.BackColor = Color.Red;//1
-                            if (extractedSauberData[2].Equals("0"))
-                                label4.BackColor = Color.Green;
-                            else
-                                label4.BackColor = Color.Red;//1
-                            if (extractedSauberData[3].Equals("0"))
-                                label5.BackColor = Color.Green;
-                            else
-                                label5.BackColor = Color.Red;//1
-                            if (extractedSauberData[4].Equals("0"))
-                                label6.BackColor = Color.Green;
-                            else
-                                label6.BackColor = Color.Red;//1
+                            setLabelColor(label3, extractedSauberData[1]);
+                            setLabelColor(label4, extractedSauberData[2]);
+                            setLabelColor(label5, extractedSauberData[3]);
+                            setLabelColor(label6, extractedSauberData[4]);
                         }
-                        else if (extractedSauberData[0].Equals("S"))//manual start
+                        else if (extractedSauberData[0].Equals("S"))//manual start 
                         {
-                            if (extractedSauberData[1].Equals("0"))
-                                label3.BackColor = Color.Green;
-                            else
-                                label3.BackColor = Color.Red;//1
-                            if (extractedSauberData[2].Equals("0"))
-                                label4.BackColor = Color.Green;
-                            else
-                                label4.BackColor = Color.Red;//1
+                            setLabelColor(label3, extractedSauberData[1]);
+                            setLabelColor(label4, extractedSauberData[2]);
                         }
                         else if (extractedSauberData[0].Equals("G"))//measuring conductivity
                         {
-                            if (extractedSauberData[1].Equals("0"))
-                                label5.BackColor = Color.Green;
-                            else
-                                label5.BackColor = Color.Red;//1
-                            if (extractedSauberData[2].Equals("0"))
-                                label6.BackColor = Color.Green;
-                            else
-                                label6.BackColor = Color.Red;//1
+                            setLabelColor(label5, extractedSauberData[1]);
+                            setLabelColor(label6, extractedSauberData[2]);
                         }
                         richTextBox1.AppendText(responseData);
                         richTextBox1.ScrollToCaret();
@@ -658,15 +642,36 @@ namespace ColorWatch
          * **/
         private void button15_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker2.IsBusy != true)
+            connectPort.Write("G");
+            Thread.Sleep(200);
+            String response = connectPort.ReadExisting();
+            if (response != null)
             {
-                //Start the asynchronous operation.
-                backgroundWorker2.RunWorkerAsync();
+                if (response.Length > 0)
+                {
+                    if (backgroundWorker2.IsBusy != true)
+                    {
+                        //Start the asynchronous operation.
+                        backgroundWorker2.RunWorkerAsync();
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
+                        connectPort.Write("B");// as the 'G' sends continuous response
+                    }
+                }
             }
+        }
+
+        /**
+         * Setting the label color according to the response
+         * **/
+        public void setLabelColor(Label label, String extractedSauberData)
+        {
+            if (extractedSauberData.Equals("0"))
+                label.BackColor = Color.Green;
             else
-            {
-                System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
-            }
+                label.BackColor = Color.Red;//1
         }
     }
 }
