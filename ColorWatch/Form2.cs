@@ -245,7 +245,6 @@ namespace ColorWatch
                         else
                         {
                             System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
-                            connectPort.Write("B");//to end the continuous manual start response
                         }
                     }
                 }
@@ -259,7 +258,6 @@ namespace ColorWatch
                     else
                     {
                         System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
-                        connectPort.Write("B");//to end the continuous manual start response
                     }
                 }
             }
@@ -410,7 +408,7 @@ namespace ColorWatch
                             }
                         }
                     }
-                    
+
                 }
             }
             //}
@@ -432,6 +430,7 @@ namespace ColorWatch
                 connectPort.Write("B");
                 //Cancel the asynchronous operation.
                 backgroundWorker1.CancelAsync();
+                backgroundWorker2.CancelAsync();
             }
         }
 
@@ -475,20 +474,6 @@ namespace ColorWatch
         }
 
         /**
-         * Cancel background process on 'stop' button click
-         * **/
-        private void button8_Click(object sender, EventArgs e)
-        {
-            if (button3.Text.Equals("Disconnect"))
-            {
-                connectPort.Write("B");
-                //Cancel the asynchronous operation.
-                backgroundWorker1.CancelAsync();
-                backgroundWorker2.CancelAsync();
-            }
-        }
-
-        /**
          * Clear the chart
          * **/
         private void button13_Click(object sender, EventArgs e)
@@ -499,6 +484,7 @@ namespace ColorWatch
                 Thread.Sleep(100);
                 chart1.Series[0].Points.Clear();
                 Form2_Load(sender, e);
+                onLoad = true;
             }
         }
 
@@ -515,8 +501,15 @@ namespace ColorWatch
                 //connectPort.Write("B");
                 //Thread.Sleep(2000);
                 richTextBox1.Clear();
-                chart1.Series[0].Points.Clear();
-                Form2_Load(sender, e);
+                if ((backgroundWorker1.IsBusy == true || backgroundWorker2.IsBusy == true) &&
+                   chart1.Series[0].Points.Count > 1)  //==1 means only measuring conductivity is running
+                    chart1.Series[0].Points.Clear();
+                else
+                {
+                    chart1.Series[0].Points.Clear();
+                    Form2_Load(sender, e);
+                    onLoad = true;
+                }
                 label3.BackColor = default(Color);
                 label4.BackColor = default(Color);
                 label5.BackColor = default(Color);
@@ -541,6 +534,7 @@ namespace ColorWatch
         {
             chart1.Series[0].Color = Color.Transparent;
             chart1.Series[0].Points.AddXY(15, -40);
+            onLoad = true;
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
@@ -666,7 +660,6 @@ namespace ColorWatch
                     else
                     {
                         System.Windows.Forms.MessageBox.Show("Please Press 'Stop' to end current process");
-                        connectPort.Write("B");// as the 'G' sends continuous response
                     }
                 }
             }

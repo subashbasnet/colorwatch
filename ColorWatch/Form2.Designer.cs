@@ -36,7 +36,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -83,11 +82,11 @@
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(109, 137);
+            this.button11.Location = new System.Drawing.Point(340, 38);
             this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(88, 69);
+            this.button11.Size = new System.Drawing.Size(88, 32);
             this.button11.TabIndex = 16;
-            this.button11.Text = "Manual Stop";
+            this.button11.Text = "Stop";
             this.button11.UseVisualStyleBackColor = true;
             this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
@@ -95,27 +94,17 @@
             // 
             this.button10.Location = new System.Drawing.Point(15, 137);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(91, 27);
+            this.button10.Size = new System.Drawing.Size(91, 46);
             this.button10.TabIndex = 15;
             this.button10.Text = "Manual Start";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(339, 36);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 23);
-            this.button8.TabIndex = 21;
-            this.button8.Text = "Stop";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(255, 36);
+            this.button7.Location = new System.Drawing.Point(259, 38);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.Size = new System.Drawing.Size(75, 32);
             this.button7.TabIndex = 20;
             this.button7.Text = "Listen";
             this.button7.UseVisualStyleBackColor = true;
@@ -197,7 +186,7 @@
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button9.Location = new System.Drawing.Point(109, 86);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(88, 45);
+            this.button9.Size = new System.Drawing.Size(91, 45);
             this.button9.TabIndex = 28;
             this.button9.Text = "Data Output Low";
             this.button9.UseVisualStyleBackColor = false;
@@ -264,7 +253,7 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(420, 37);
+            this.button13.Location = new System.Drawing.Point(484, 356);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(75, 23);
             this.button13.TabIndex = 30;
@@ -275,9 +264,9 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(15, 292);
+            this.button14.Location = new System.Drawing.Point(18, 280);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(88, 34);
+            this.button14.Size = new System.Drawing.Size(88, 46);
             this.button14.TabIndex = 31;
             this.button14.Text = "RESET";
             this.button14.UseVisualStyleBackColor = true;
@@ -301,7 +290,7 @@
             // label3
             // 
             this.label3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label3.Location = new System.Drawing.Point(15, 209);
+            this.label3.Location = new System.Drawing.Point(18, 186);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(88, 38);
             this.label3.TabIndex = 33;
@@ -311,7 +300,7 @@
             // label4
             // 
             this.label4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label4.Location = new System.Drawing.Point(109, 209);
+            this.label4.Location = new System.Drawing.Point(112, 186);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(88, 38);
             this.label4.TabIndex = 34;
@@ -321,7 +310,7 @@
             // label5
             // 
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label5.Location = new System.Drawing.Point(15, 251);
+            this.label5.Location = new System.Drawing.Point(18, 228);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(88, 38);
             this.label5.TabIndex = 35;
@@ -331,7 +320,7 @@
             // label6
             // 
             this.label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label6.Location = new System.Drawing.Point(109, 251);
+            this.label6.Location = new System.Drawing.Point(112, 228);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 38);
             this.label6.TabIndex = 36;
@@ -340,9 +329,9 @@
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(15, 170);
+            this.button15.Location = new System.Drawing.Point(109, 137);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(91, 36);
+            this.button15.Size = new System.Drawing.Size(91, 46);
             this.button15.TabIndex = 37;
             this.button15.Text = "Conductivity Start";
             this.button15.UseVisualStyleBackColor = true;
@@ -368,7 +357,6 @@
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.button8);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.comboBox1);
@@ -393,7 +381,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
